@@ -32,7 +32,7 @@ function downloadFromJson($jsonfile, $filter = 'js')
 
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                $data = curl_exec($ch);
+                echo $data = curl_exec($ch);
                 curl_close($ch);
 
                 file_put_contents($path, $data);
