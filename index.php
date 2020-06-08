@@ -21,8 +21,8 @@ function replace_first($needle, $replace, $haystack)
 $request = replace_first("/", "", $_SERVER['REQUEST_URI']);
 #split the path by '/'
 $params = explode('/', $request);
-//var_dump($request, $params);
-//die;
+var_dump($request, $params, $_GET);
+die;
 $safe_pages = ["json", "script"];
 
 if (in_array($params[0], $safe_pages)) {
