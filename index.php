@@ -6,8 +6,8 @@ error_reporting(E_ALL);
 //var_dump($_SERVER['REQUEST_URI']);
 //die;
 #remove the directory path we don't want
-$request = $_SERVER['REQUEST_URI'];
-//$request = str_replace("/envato/pretty/php/", "", $_SERVER['REQUEST_URI']);
+//$request = $_SERVER['REQUEST_URI'];
+$request = str_replace("/", "", $_SERVER['REQUEST_URI']);
 
 #split the path by '/'
 $params = explode('/', $request);
