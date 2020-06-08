@@ -3,11 +3,23 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+function replace_first($needle, $replace, $haystack)
+{
+    $newstring = $haystack;
+    $pos = strpos($haystack, $needle);
+    if ($pos !== false) {
+        $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
+    }
+    return $newstring;
+}
+
 //var_dump($_SERVER['REQUEST_URI']);
 //die;
 #remove the directory path we don't want
 //$request = $_SERVER['REQUEST_URI'];
-$request = str_replace("/", "", $_SERVER['REQUEST_URI']);
+//$request = str_replace("/", "", $_SERVER['REQUEST_URI']);
+$request = replace_first("/", "", $_SERVER['REQUEST_URI']);
+
 
 #split the path by '/'
 $params = explode('/', $request);
