@@ -95,7 +95,7 @@ $dirs = scandir($dir);
 $filename = (int)key($_GET);
 if (in_array($filename, $dirs)) {
 
-    echo "//  https://get.wapka.pl/$filename.js \n";
+    echo "//  https://get.wapka.pl/$filename.pack.js \n";
 
 //    echo file_get_contents( "//load.jloads.com/load.js");
     echo file_get_contents("load.js");
