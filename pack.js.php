@@ -125,14 +125,17 @@ if (in_array($filename, $dirs)) {
     echo file_get_contents("load.js");
     echo "\n";
 
-    downloadFromJson($filename . "/" . "jloads.json", 'js');
-    echo loadFromJson($filename . "/" . "jloads.json", 'js');
-    echo "\n";
+
     echo "var json =";
     echo removeFromJson($filename . "/" . "jloads.json", "js");
 //    echo file_get_contents( $filename . "/" . "jloads.json");
     echo ";";
     echo "\n";
     echo file_get_contents("loadAll.js");
+
+
+    downloadFromJson($filename . "/" . "jloads.json", 'js');
+    echo loadFromJson($filename . "/" . "jloads.json", 'js');
+    echo "\n";
 }
 exit();
