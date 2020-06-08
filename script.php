@@ -37,6 +37,7 @@ if(in_array($filename, $dirs)){
     echo "var json =";
     echo file_get_contents( $filename . "/" . "jloads.json");
     echo ";";
+    echo file_get_contents( "debug.js");
     echo file_get_contents( "loadAll.js");
 }
 
