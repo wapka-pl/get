@@ -21,6 +21,9 @@ function saveUrlFile($url)
     $url_base64 = base64_encode($url);
     $path = 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 
+    echo "\n //" .  $path;
+    echo "\n //" .  file_exists($path);
+
     if (file_exists($path)) {
         return true;
     }
@@ -30,7 +33,7 @@ function saveUrlFile($url)
     if (empty($url_info['scheme'])) {
         $download = 'https:' . $url;
     }
-    echo $download;
+    echo "\n //" . $download;
 
     $ch = curl_init($download);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -138,7 +141,6 @@ $dirs = scandir($dir);
 //var_dump($_GET);
 
 echo "//  https://get.wapka.pl/b64 \n";
-
 echo file_get_contents("debug.js");
 //    echo file_get_contents( "//load.jloads.com/load.js");
 echo file_get_contents("load.js");
@@ -148,10 +150,9 @@ echo "\n";
 echo "var json =";
 $json_array = removeFromJsonArray($json_array, $filter = 'js');
 echo json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
-//    echo file_get_contents( $filename . "/" . "jloads.json");
 echo ";";
 echo "\n";
+
 echo file_get_contents("loadAll.js");
 
 //$jsonfile = $filename . "/" . "jloads.json";
