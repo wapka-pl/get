@@ -23,7 +23,7 @@ $request = replace_first("/", "", $_SERVER['REQUEST_URI']);
 $params = explode('.', $request);
 $_GET[$params[0]] = $params[0];
 var_dump($request, $params, $_GET);
-//die;
+die;
 $safe_pages = ["json", "script", "js"];
 
 if (in_array($params[1], $safe_pages)) {
