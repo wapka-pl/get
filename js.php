@@ -6,11 +6,11 @@ include_once('header/js.php');
 
 $dir    = '.';
 $dirs = scandir($dir);
-
+var_dump($_GET);
 $filename = (int) key($_GET);
-echo $filename;
-
 if(in_array($filename, $dirs)){
+    echo "//  https://get.wapka.pl/$filename.js";
+
 //    echo file_get_contents( "//load.jloads.com/load.js");
     echo file_get_contents( "load.js");
     echo "var json =";
