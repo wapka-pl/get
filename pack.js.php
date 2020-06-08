@@ -21,6 +21,10 @@ function saveUrlFile($url)
     $url_base64 = base64_encode($url);
     $path = 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 
+    if(file_exists($path)){
+        return true;
+    }
+
     $url_info = parse_url($url);
     $download = $url;
     if (empty($url_info['scheme'])) {
