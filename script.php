@@ -1,29 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 // https://get.wapka.pl/script.php?1
-
-
-if(!empty($_SERVER['HTTP_ORIGIN'])){
-    $http_origin = $_SERVER['HTTP_ORIGIN'];
-} else {
-    //var_dump( $_SERVER );
-    //$http_origin = $_SERVER['HTTP_REFERER'];
-    $http_origin = 'http://' . $_SERVER['HTTP_HOST'];
-}
-
-header("Access-Control-Allow-Origin: $http_origin");
-
-header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET');
-header('Access-Control-Expose-Headers: Content-Length, X-JSON');
-header('Access-Control-Max-Age: 86400');
-header('Access-Control-Allow-Headers: Origin, Content-Type, X-Requested-With, X-Auth-Token , Authorization, Access-Control-Allow-Headers, Access-Control-Expose-Headers, Access-Control-Allow-Methods');
-header('Content-Type: text/javascript');
-
-
+// https://get.wapka.pl/script/1
+include_once('header/js.php');
 
 $dir    = '.';
 $dirs = scandir($dir);
