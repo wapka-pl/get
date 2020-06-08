@@ -8,7 +8,6 @@
 // https://get.wapka.pl/1.json
 include_once('header/json.php');
 
-
 $dir    = '.';
 $dirs = scandir($dir);
 
@@ -16,4 +15,4 @@ $filename = (int) key($_GET);
 if(in_array($filename, $dirs)){
     echo file_get_contents( $filename . "/" . "jloads.json");
 }
-//var_dump($_GET);
+exit();

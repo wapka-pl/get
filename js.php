@@ -19,4 +19,4 @@ if(in_array($filename, $dirs)){
     echo file_get_contents( "debug.js");
     echo file_get_contents( "loadAll.js");
 }
-
+exit();
