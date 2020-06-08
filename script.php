@@ -10,10 +10,10 @@ $dirs = scandir($dir);
 
 $filename = (int) key($_GET);
 echo $filename;
-echo file_get_contents( "//load.jloads.com/load.js");
 
 if(in_array($filename, $dirs)){
-    echo file_get_contents( "//load.jloads.com/load.js");
+//    echo file_get_contents( "//load.jloads.com/load.js");
+    echo file_get_contents( "load.js");
     echo "var json =";
     echo file_get_contents( $filename . "/" . "jloads.json");
     echo ";";
