@@ -19,17 +19,19 @@ function replace_first($needle, $replace, $haystack)
 #remove the directory path we don't want
 //$request = $_SERVER['REQUEST_URI'];
 //$request = str_replace("/", "", $_SERVER['REQUEST_URI']);
-$request = replace_first("/", "", $_SERVER['REQUEST_URI']);
+$filename = replace_first("/", "", $_SERVER['REQUEST_URI']);
 #split the path by '/'
 
-$params = explode('.', $request);
-$_GET[$params[0]] = $params[0];
+$params = explode('.', $filename);
+$id = $_GET[$params[0]] = $params[0];
 //var_dump($request, $params, $_GET);
 //die;
-$safe_pages = ["json", "script", "js"];
-
-if (in_array($params[1], $safe_pages)) {
-    include($params[1] . ".php");
+$safe_pages = ["json", "script", "pack.js", "js"];
+//$last_key = count($params) - 1;
+//$extension = $params[$last_key];
+$extension = replace_first($id . ".", "", $filename);
+if (in_array($extension, $safe_pages)) {
+    include($extension . ".php");
 } else {
     include("404.php");
 }
