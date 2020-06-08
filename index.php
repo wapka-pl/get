@@ -22,7 +22,7 @@ $request = replace_first("/", "", $_SERVER['REQUEST_URI']);
 #split the path by '/'
 $params = explode('.', $request);
 $_GET[$params[0]] = $params[0];
-//var_dump($request, $params, $_GET);
+var_dump($request, $params, $_GET);
 //die;
 $safe_pages = ["json", "script", "js"];
 
