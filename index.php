@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 $request  = str_replace("/envato/pretty/php/", "", $_SERVER['REQUEST_URI']);
 
 #split the path by '/'
-$params     = preg_split("/", $request);
+$params     = preg_split('/', $request);
 $safe_pages = ["json", "script"];
 
 if(in_array($params[0], $safe_pages)) {
