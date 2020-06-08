@@ -1,0 +1,12 @@
+{
+  "head": [
+    "//code.jquery.com/ui/1.12.1/jquery-ui.min.js",
+    "//stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css",
+    "//code.jquery.com/jquery-3.5.1.min.js",
+    "//stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js",
+    "css/pink.css"
+  ],
+  "#image": [
+    "https://logo.jloads.com/6/cover.png"
+  ]
+}
