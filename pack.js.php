@@ -131,15 +131,15 @@ if (in_array($filename, $dirs)) {
 
 
     echo "var json =";
-    echo removeFromJson($filename . "/" . "jloads.json", "js");
+    echo removeFromJsonFile($filename . "/" . "jloads.json", "js");
 //    echo file_get_contents( $filename . "/" . "jloads.json");
     echo ";";
     echo "\n";
     echo file_get_contents("loadAll.js");
 
 
-    downloadFromJson($filename . "/" . "jloads.json", 'js');
-    echo loadFromJson($filename . "/" . "jloads.json", 'js');
+    downloadFromJsonArray($filename . "/" . "jloads.json", 'js');
+    echo loadFromJsonArray($filename . "/" . "jloads.json", 'js');
     echo "\n";
 }
 exit();

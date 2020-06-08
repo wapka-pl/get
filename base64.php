@@ -21,7 +21,7 @@ function saveUrlFile($url)
     $url_base64 = base64_encode($url);
     $path = 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 
-    if(file_exists($path)){
+    if (file_exists($path)) {
         return true;
     }
 
@@ -54,11 +54,8 @@ function loadUrlFile($url, $data = '')
     return $data;
 }
 
-function downloadFromJson($jsonfile, $filter = 'js')
+function downloadFromJsonArray($json_array, $filter = 'js')
 {
-    $json_string = file_get_contents($jsonfile);
-//    var_dump($json_string);
-    $json_array = json_decode($json_string, true);
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
         foreach ($list as $id => $url) {
@@ -71,11 +68,8 @@ function downloadFromJson($jsonfile, $filter = 'js')
     }
 }
 
-function loadFromJson($jsonfile, $filter = 'js')
+function loadFromJsonArray($json_array, $filter = 'js')
 {
-    $json_string = file_get_contents($jsonfile);
-//    var_dump($json_string);
-    $json_array = json_decode($json_string, true);
     $data = '';
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
@@ -91,12 +85,20 @@ function loadFromJson($jsonfile, $filter = 'js')
     return $data;
 }
 
-function removeFromJson($jsonfile, $filter = 'js')
+function removeFromJsonFile($jsonfile, $filter = 'js')
 {
     $json_string = file_get_contents($jsonfile);
 //    var_dump($json_string);
     $json_array = json_decode($json_string, true);
-    $data = '';
+
+    $json_array = removeFromJsonArray($json_array, $filter);
+
+    return json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+}
+
+
+function removeFromJsonArray($json_array, $filter = 'js')
+{
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
         $taglist = [];
@@ -112,14 +114,19 @@ function removeFromJson($jsonfile, $filter = 'js')
         }
         $json_array[$tag] = $taglist;
     }
-
-    return json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    return $json_array;
 }
 
-$json_base64 = (int)key($_GET);
+
+if (empty($_GET['b64'])) {
+    include("404.php");
+}
+
+$json_base64 = $_GET['b64'];
+//var_dump($json_base64);
 $json_string = base64_decode($json_base64);
-var_dump($json_string);
-die;
+//var_dump($json_string);
+//die;
 $json_array = json_decode($json_string, true);
 //
 //function isJson(){
@@ -129,26 +136,30 @@ $json_array = json_decode($json_string, true);
 $dir = '.';
 $dirs = scandir($dir);
 //var_dump($_GET);
-if (isJson($filename, $dirs)) {
 
-    echo "//  https://get.wapka.pl/$filename.pack.js \n";
+echo "//  https://get.wapka.pl/b64 \n";
 
-    echo file_get_contents("debug.js");
+echo file_get_contents("debug.js");
 //    echo file_get_contents( "//load.jloads.com/load.js");
-    echo file_get_contents("load.js");
-    echo "\n";
+echo file_get_contents("load.js");
+echo "\n";
 
 
-    echo "var json =";
-    echo removeFromJson($filename . "/" . "jloads.json", "js");
+echo "var json =";
+$json_array = removeFromJsonArray($json_array, $filter = 'js');
+echo json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
 //    echo file_get_contents( $filename . "/" . "jloads.json");
-    echo ";";
-    echo "\n";
-    echo file_get_contents("loadAll.js");
+echo ";";
+echo "\n";
+echo file_get_contents("loadAll.js");
 
+//$jsonfile = $filename . "/" . "jloads.json";
+//$json_string = file_get_contents($jsonfile);
+//$json_array = json_decode($json_string, true);
 
-    downloadFromJson($filename . "/" . "jloads.json", 'js');
-    echo loadFromJson($filename . "/" . "jloads.json", 'js');
-    echo "\n";
-}
+downloadFromJsonArray($json_array, 'js');
+echo loadFromJsonArray($json_array, 'js');
+echo "\n";
+
 exit();
