@@ -1,4 +1,8 @@
 <?php
+
+var_dump($_SERVER['REQUEST_URI'], $_GET);
+die;
+
 // https://get.wapka.pl/json.php?1
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -14,8 +18,7 @@ function replace_first($needle, $replace, $haystack)
     return $newstring;
 }
 
-var_dump($_SERVER['REQUEST_URI'], $_GET);
-die;
+
 #remove the directory path we don't want
 //$request = $_SERVER['REQUEST_URI'];
 //$request = str_replace("/", "", $_SERVER['REQUEST_URI']);
