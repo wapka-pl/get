@@ -3,6 +3,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 function replace_first($needle, $replace, $haystack)
 {
     $newstring = $haystack;
@@ -20,6 +21,7 @@ function replace_first($needle, $replace, $haystack)
 //$request = str_replace("/", "", $_SERVER['REQUEST_URI']);
 $request = replace_first("/", "", $_SERVER['REQUEST_URI']);
 #split the path by '/'
+
 $params = explode('.', $request);
 $_GET[$params[0]] = $params[0];
 var_dump($request, $params, $_GET);
