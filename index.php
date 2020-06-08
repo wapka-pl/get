@@ -11,7 +11,7 @@ $request = $_SERVER['REQUEST_URI'];
 
 #split the path by '/'
 $params = preg_split('//', $request);
-var_dump($params);
+var_dump($request, $params);
 die;
 $safe_pages = ["json", "script"];
 
