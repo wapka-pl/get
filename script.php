@@ -1,5 +1,9 @@
 <?php
-// https://get.wapka.pl/json.php?1
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// https://get.wapka.pl/script.php?1
 
 $dir    = '.';
 $dirs = scandir($dir);
