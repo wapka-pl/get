@@ -4,6 +4,6 @@
 
 $filename = key($_GET);
 if($filename === integer){
-    echo file_get_contents("1/" . $filename . ".json");
+    echo file_get_contents( $filename . "/" . "jloads.json");
 }
 //var_dump($_GET);
