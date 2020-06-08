@@ -1,8 +1,5 @@
 <?php
 
-var_dump($_SERVER['REQUEST_URI'], $_GET);
-die;
-
 // https://get.wapka.pl/json.php?1
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
