@@ -117,6 +117,7 @@ if (in_array($filename, $dirs)) {
 
     echo "//  https://get.wapka.pl/$filename.pack.js \n";
 
+    echo file_get_contents("debug.js");
 //    echo file_get_contents( "//load.jloads.com/load.js");
     echo file_get_contents("load.js");
     echo "\n";
@@ -129,7 +130,6 @@ if (in_array($filename, $dirs)) {
 //    echo file_get_contents( $filename . "/" . "jloads.json");
     echo ";";
     echo "\n";
-    echo file_get_contents("debug.js");
     echo file_get_contents("loadAll.js");
 }
 exit();
