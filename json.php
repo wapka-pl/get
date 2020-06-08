@@ -5,6 +5,7 @@
 
 // https://get.wapka.pl/json.php?1
 // https://get.wapka.pl/json/1
+// https://get.wapka.pl/1.json
 include_once('header/json.php');
 
 

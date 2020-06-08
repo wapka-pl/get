@@ -1,6 +1,7 @@
 <?php
-// https://get.wapka.pl/script.php?1
-// https://get.wapka.pl/script/1
+// https://get.wapka.pl/js.php?1
+// https://get.wapka.pl/js/1
+// https://get.wapka.pl/1.js
 include_once('header/js.php');
 
 $dir    = '.';
