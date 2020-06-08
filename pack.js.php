@@ -95,15 +95,18 @@ function removeFromJson($jsonfile, $filter = 'js')
     $data = '';
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
-
+        $taglist = [];
         foreach ($list as $id => $url) {
 
             $info = pathinfo($url);
 //            var_dump($info);
             if ($info["extension"] === $filter) {
-                unset($json_array[$tag][$id]);
+//                unset($json_array[$tag][$id]);
+            } else {
+                $taglist[] = $json_array[$tag][$id];
             }
         }
+        $json_array[$tag] = $taglist;
     }
 
     return json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
