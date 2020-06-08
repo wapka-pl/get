@@ -6,7 +6,7 @@ include_once('header/js.php');
 
 $dir    = '.';
 $dirs = scandir($dir);
-var_dump($_GET);
+//var_dump($_GET);
 $filename = (int) key($_GET);
 if(in_array($filename, $dirs)){
     echo "//  https://get.wapka.pl/$filename.js";
