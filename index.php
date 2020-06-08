@@ -10,7 +10,7 @@ $request = $_SERVER['REQUEST_URI'];
 //$request = str_replace("/envato/pretty/php/", "", $_SERVER['REQUEST_URI']);
 
 #split the path by '/'
-$params = explode('//', $request);
+$params = explode('/', $request);
 var_dump($request, $params);
 die;
 $safe_pages = ["json", "script"];
