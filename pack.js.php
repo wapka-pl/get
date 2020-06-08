@@ -106,7 +106,7 @@ function removeFromJson($jsonfile, $filter = 'js')
         }
     }
 
-    return json_encode($json_array, JSON_UNESCAPED_SLASHES || JSON_UNESCAPED_UNICODE);
+    return json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
 
 $dir = '.';
