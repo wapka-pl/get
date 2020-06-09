@@ -93,7 +93,8 @@ function removeFromJsonFile($jsonfile, $filter = 'js')
     $json_string = file_get_contents($jsonfile);
 //    var_dump($json_string);
     $json_array = json_decode($json_string, true);
-
+//    var_dump('removeFromJsonFile',$json_array);
+//    die;
     $json_array = removeFromJsonArray($json_array, $filter);
 
     return json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -102,6 +103,8 @@ function removeFromJsonFile($jsonfile, $filter = 'js')
 
 function removeFromJsonArray($json_array, $filter = 'js')
 {
+//    var_dump('removeFromJsonArray',$json_array);
+//    die;
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
         $taglist = [];
@@ -119,7 +122,8 @@ function removeFromJsonArray($json_array, $filter = 'js')
     }
     return $json_array;
 }
-
+//http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9odG1sL2NyZWF0ZS5odG1sIiwKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9qcy9jcmVhdGUuanMiCiAgICAgICAgICAgIF0KICAgICAgICB9
+//http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIsCiAgICAgICAgICAgICAgICAiaHR0cHM6Ly9hcHAud2Fwa2EucGwvaHRtbC9jcmVhdGUuaHRtbCIsCiAgICAgICAgICAgICAgICAiaHR0cHM6Ly9hcHAud2Fwa2EucGwvanMvY3JlYXRlLmpzIgogICAgICAgICAgICBdCiAgICAgICAgfQ==
 
 if (empty($_GET['b64'])) {
     include("404.php");
@@ -128,10 +132,22 @@ if (empty($_GET['b64'])) {
 $json_base64 = $_GET['b64'];
 //var_dump($json_base64);
 $json_string = base64_decode($json_base64);
+
+// clean white spaces
+$json_string = preg_replace('/\s\s+/', ' ', $json_string);
+
 //var_dump($json_string);
 //die;
+//$json_array = json_decode($json_string);
 $json_array = json_decode($json_string, true);
-//
+
+if(empty($json_array)){
+    echo "JSON FORMAT PROBLEM";
+    die;
+}
+//$json_array = json_decode($json_string, true);
+//var_dump($json_array);
+//die;
 //function isJson(){
 //
 //}
