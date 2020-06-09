@@ -59,6 +59,8 @@ function loadUrlFile($url, $data = '')
 
 function downloadFromJsonArray($json_array, $filter = 'js')
 {
+    var_dump($json_array);
+    die;
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
         foreach ($list as $id => $url) {
@@ -135,7 +137,7 @@ $json_string = base64_decode($json_base64);
 
 // clean white spaces
 $json_string = preg_replace('/\s\s+/', ' ', $json_string);
-echo "// $json_string";
+echo "// $json_string \n";
 //var_dump($json_string);
 //die;
 //$json_array = json_decode($json_string);
