@@ -18,6 +18,7 @@ function getXHRObject() {
             break;
         }
     } finally {
+
         return xhrObj;
     }
 }
@@ -78,17 +79,18 @@ if (typeof log !== 'function') {
  * @returns {HTMLHeadElement}
  */
 function getTarget(target) {
-    log(this.constructor.name, ' target ', target);
+    this.constructor.name = 'getTarget';
+
+    // log(this.constructor.name, ' target ', target);
     if (isEmpty(target)) {
         target = document.getElementsByTagName('head')[0];
-        log(this.constructor.name, ' HEAD ', target, typeof target, target.innerHTML !== 'undefined',  target.innerHTML.length, Object.keys(target));
+        log(this.constructor.name, ' isEmpty HEAD ', target, typeof target, target.innerHTML !== 'undefined',  target.innerHTML.length, Object.keys(target));
         if (isEmpty(target)) {
             target = document.body;
-            log(this.constructor.name, ' BODY ', target);
+            log(this.constructor.name, ' isEmpty BODY ', target);
         }
     }
-    log(this.constructor.name, ' target ', target);
-    console.log(' getTarget ', target);
+    log(this.constructor.name, ' target: ', target);
 
     return target;
 }
@@ -264,52 +266,66 @@ if (typeof log !== 'function') {
  */
 function includeHtml(url, target, replace, success, error) {
 
-    var xhttp;
-
-
-    var elmnt = el.first();
+    if (typeof replace === 'number' && replace === 1) {
+        replace = true;
+    }
 
     if (typeof success !== 'function') {
         success = function () {
-            log(this.constructor.name, 'includeHtml success', "included");
+            log(this.constructor.name, ' includeHtml success ', "included");
         }
     }
 
     if (typeof error !== 'function') {
         error = function () {
-            log(this.constructor.name, 'includeHtml error', "Page not found.");
+            log(this.constructor.name, ' includeHtml error ', "Page not found.");
         }
     }
-    log(this.constructor.name, 'includeHtml url', url);
+    log(this.constructor.name, ' includeHtml url ', url);
 
     if (url) {
         /* Make an HTTP request using the attribute value as the url name: */
-        xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function () {
-            log(this.constructor.name, 'includeHtml el_id', target);
+        var xhrObj = getXHRObject();
+        // xhrObj.setRequestHeader("Content-Type","text/html; charset=UTF-8");
+        // xhrObj.setRequestHeader("Content-Type","multipart/form-data; boundary=something");
+        xhrObj.onreadystatechange = function () {
+
+            log('includeHtml getXHRObject', ' includeHtml target: ', target);
 
             if (this.readyState == 4) {
-                if (this.status == 200) {
+                // document.onload =
+                loadHtmlByStatus(this.status, this.responseText, target, success, error);
 
-                    elmnt.insertAdjacentHTML('beforeend', this.responseText);
-
-                    success(this);
-                }
-                if (this.status == 404) {
-                    elmnt.innerHTML = "includeHtml Page not found.";
-                    error(this);
-                }
                 /* Remove the attribute, and call this function once more: */
                 // includeHtml(url, success, error);
             }
         }
-        xhttp.open("GET", url, true);
-        xhttp.send();
+        xhrObj.open("GET", url, true);
+        // xhrObj.responseType = 'text';
+        xhrObj.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
+        xhrObj.send();
         /* Exit the function: */
         return this;
     }
     return false;
 
+}
+
+function loadHtmlByStatus(status, responseText, target, success, error) {
+    this.constructor.name = 'loadHtmlByStatus';
+
+    log(this.constructor.name, ' includeHtml waiting for DOM tree ', getTarget(target));
+
+    if (status == 200) {
+        log(this.constructor.name, ' includeHtml loaded HTML: ', responseText);
+        getTarget(target).insertAdjacentHTML('beforeend', responseText);
+        return success(this);
+    }
+    if (status == 404) {
+        getTarget(target).innerHTML = "includeHtml Page not found.";
+        return error(this, status);
+    }
+    return error(this);
 }
 // include-image.js
 if (typeof log !== 'function') {
@@ -640,13 +656,13 @@ var Load = function (target, success, error) {
     self.css = function (url) {
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
-                    log(this.constructor.name, ' delayed ', self.cfg.delay, url);
+                    log(this.constructor.name, ' css delayed ', self.cfg.delay, url);
                     self.loadCss(url, self.cfg.target, self.success, self.error);
                 },
                 self.cfg.delay
             );
         } else {
-            log(this.constructor.name, ' loaded ', url);
+            log(this.constructor.name, ' css loaded ', url);
             self.loadCss(url, self.cfg.target, self.success, self.error);
         }
         return self;
@@ -654,41 +670,68 @@ var Load = function (target, success, error) {
     self.style = self.css;
 
 
+
     self.html = function (url) {
 
-        if (typeof url === 'object') {
-            //log(this.constructor.name, 'obj:', obj);
-
-            for (var i in url) {
-
-                var script_url = self.getEnvUrl(url[i]);
-                log(this.constructor.name, ' html script_url ', script_url);
-                try {
-                    var exe = includeHtml(script_url, self.cfg.target, self.cfg.replace, success, error);
-                    log(this.constructor.name, ' html ', script_url, exe);
-                } catch (err) {
-                    console.error(' !load html ', script_url, err);
-                }
-            }
+        if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
+            setTimeout(function () {
+                    log(this.constructor.name, ' html delayed ', self.cfg.delay, url);
+                    self.loadHtml(url);
+                },
+                self.cfg.delay
+            );
         } else {
-            includeHtml(self.getEnvUrl(url), self.cfg.target, self.cfg.replace, success, error);
-            // console.error('apiunit obj: is not object:', obj);
+            log(this.constructor.name, ' html url ', url);
+            self.loadHtml(url);
         }
         return self;
     };
+
+    self.loadHtml = function (url) {
+        if (typeof url === 'object') {
+            //log(this.constructor.name, 'obj:', obj);
+            var last = false;
+            var len = url.length - 1;
+            for (var i in url) {
+                last = (len == i);
+                log(this.constructor.name, ' html url.length ', len, i, last);
+
+                var script_url = self.getEnvUrl(url[i]);
+                log(this.constructor.name, ' html script_url ', script_url);
+
+                try {
+                    // if (last) {
+                        var exe = includeHtml(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
+                    // } else {
+                    //     var exe = includeHtml(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
+                    // }
+                    log(this.constructor.name, ' html ', script_url, exe);
+                } catch (err) {
+                    console.error('! html ', script_url, err);
+                    error();
+                }
+            }
+        } else {
+            includeHtml(self.getEnvUrl(url), self.cfg.target, self.cfg.replace, self.success, self.error);
+            // console.error('apiunit obj: is not object:', obj);
+        }
+
+        return self;
+    };
+
 
 
     self.img = function (url) {
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
                     log(this.constructor.name, ' image delayed', self.cfg.delay, url);
-                    self.loadImage(url, self.cfg.target, self.cfg.replace, self.success, self.error);
+                    self.loadImage(url);
                 },
                 self.cfg.delay
             );
         } else {
             log(this.constructor.name, ' image loaded ', url, self.cfg.delay);
-            self.loadImage(url, self.cfg.target, self.cfg.replace, self.success, self.error);
+            self.loadImage(url);
         }
         return self;
     };
@@ -704,14 +747,14 @@ var Load = function (target, success, error) {
                 log(this.constructor.name, ' img url[i]', url[i]);
 
                 try {
-                    var exe = includeImage(script_url, target, replace, success, error);
+                    var exe = includeImage(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
                     log(this.constructor.name, ' img ', script_url, exe);
                 } catch (err) {
                     console.error('! img ', script_url, err);
                 }
             }
         } else {
-            includeImage(self.getEnvUrl(url), target, replace, success, error);
+            includeImage(self.getEnvUrl(url), self.cfg.target, self.cfg.replace, self.success, self.error);
             // console.error('apiunit obj: is not object:', obj);
         }
         return self;
@@ -746,9 +789,13 @@ function getFunctionName(url, map) {
     var ext = getFileExtension(url)
     log(this.constructor.name, ' url ', url);
     log(this.constructor.name, ' map ', map);
-    return map[ext];
-}
+    var result = map[ext];
 
+    if (isEmpty(result)) {
+        throw new Error('key or Value Is Empty or Key not exits in Map');
+    }
+    return result;
+}
 
 
 /**
@@ -759,7 +806,7 @@ function getFunctionName(url, map) {
  * @constructor
  */
 function loadAll(json, success, error, mapFunction) {
-
+    this.constructor.name = 'loadAll';
     //url is URL of external file, success is the code
     //to be called from the file, location is the location to
     //insert the <script> element
@@ -767,10 +814,10 @@ function loadAll(json, success, error, mapFunction) {
     if (typeof success !== 'function' && (typeof success !== 'object' || success === null)) {
         // Configuration
         success = function (data) {
-            console.log('loaded', data);
+            console.log('loadAll loaded ', data);
         };
         error = function (data) {
-            console.error('!loaded', data);
+            console.error('loadAll !loaded ', data);
         };
     }
 
@@ -785,43 +832,74 @@ function loadAll(json, success, error, mapFunction) {
             'bmp': 'img',
             'jpg': 'img',
             'gif': 'img',
+            'htm': 'html',
+            'html': 'html',
+            'html5': 'html'
         }
     }
+    console.log(' loadAll', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
 
-    for (var i in json) {
-        var object = json[i];
-        console.log(i);
-        const elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
+    if (Object.keys(json).length === 1) {
+        getOne(json, Object.keys(json)[0], mapFunction, success, error)
+    } else {
+        for (var i in json) {
+            var object = json[i];
+            getOne(object, i, mapFunction, success, error)
+        }
+    }
+    // success(json);
 
-        if (!isEmpty(elem)) {
+}
 
-            var jloads = new Load(elem, success, error);
+function getOne(object, i, mapFunction, success, error) {
+    console.log('loadAll getOne ', ' object i ', object, i);
 
-            if (isArray(object)) {
-                var url = '';
-                for (var id in object) {
-                    url = object[id];
-                    if (typeof url === 'string') {
+    const elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
+    console.log('loadAll getOne ', ' elem ', elem);
 
-                        log(this.constructor.name, 'elem', elem);
-                        var funcName = getFunctionName(url, mapFunction);
+    if (!isEmpty(elem)) {
+        loadContentByUrls(object, elem, mapFunction, success, error);
+    } else {
+        document.onload = function () {
 
-                        log(this.constructor.name, 'funcName', funcName);
-                        // console.log(funcName, url, elem);
+            const elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
 
-                        jloads[funcName]([url]);
-                        // jloads.js([url]);
-                        // elem.appendChild(url, funcName);
-                        // success(elem);
+            log('loadAll getOne document.onload ', ' wait for DOM tree if not exist jet ', i, e);
 
-                    }
-                }
+            if (!isEmpty(elem)) {
+                loadContentByUrls(object, elem, mapFunction, success, error);
+            } else {
+                error(elem);
             }
-
-        } else {
-            error(elem);
         }
-
     }
+}
 
-};
+function loadContentByUrls(object, elem, mapFunction, success, error) {
+    var jloads = new Load(elem, success, error);
+
+    this.constructor.name = 'loadAll loadContent';
+
+    if (isArray(object)) {
+        var url = '';
+        for (var id in object) {
+            url = object[id];
+            if (typeof url === 'string') {
+                try {
+                    var funcName = getFunctionName(url, mapFunction);
+                    log(this.constructor.name, ' funcName ', funcName);
+                    // console.log(funcName, url, elem);
+                    jloads[funcName](url);
+                    success(url);
+                } catch (e) {
+                    log(this.constructor.name, ' elem ', elem);
+                    log(this.constructor.name, ' ERROR ', e);
+                    error(e);
+                }
+
+                // jloads.js([url]);
+                // elem.appendChild(url, funcName);
+            }
+        }
+    }
+}
