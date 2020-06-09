@@ -59,8 +59,8 @@ function loadUrlFile($url, $data = '')
 
 function downloadFromJsonArray($json_array, $filter = 'js')
 {
-    var_dump($json_array);
-    die;
+//    var_dump($json_array);
+//    die;
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
         foreach ($list as $id => $url) {
@@ -166,8 +166,8 @@ echo "\n";
 
 
 echo "var json =";
-$json_array = removeFromJsonArray($json_array, $filter = 'js');
-echo json_encode($json_array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$json_array_without_js = removeFromJsonArray($json_array, $filter = 'js');
+echo json_encode($json_array_without_js, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo ";";
 echo "\n";
 
