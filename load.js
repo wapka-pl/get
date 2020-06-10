@@ -1,3 +1,250 @@
+// load.js
+if (typeof log !== 'function') {
+
+    var print_log = function (arguments) {
+        var str = ':: ';
+        for (var i in arguments) {
+            str += arguments[i];
+            str += ', ';
+        }
+        console.log(str);
+        return str;
+    }
+    var log = function () {
+        return print_log(arguments);
+        // arguments[0] === 'Load' || print_log();
+    }
+
+}
+
+if (typeof err !== 'function') {
+
+    var print_error = function (arguments) {
+        var str = ':: ';
+        for (var i in arguments) {
+            str += arguments[i];
+            str += ', ';
+        }
+        console.error(str);
+        return str;
+    }
+    var err = function () {
+        return print_error(arguments);
+        // arguments[0] === 'Load' || print_log();
+    }
+
+}
+
+// PUBLIC
+var elem = document.body;
+
+var mapFunction = {
+    'js': 'js',
+    'css': 'css',
+    'css2': 'css',
+    'css3': 'css',
+    'png': 'img',
+    'bmp': 'img',
+    'jpg': 'img',
+    'gif': 'img',
+    'htm': 'html',
+    'html': 'html',
+    'html5': 'html'
+}
+
+/**
+ *
+ * @param filename
+ * @returns {string}
+ */
+function getFileExtension(filename) {
+    return filename.split("?")[0].split("#")[0].split('.').pop();
+}
+
+/**
+ *
+ * @param url
+ * @param map
+ * @returns {*}
+ */
+function getFunctionName(url, map) {
+    const f = 'getFunctionName';
+
+    var ext = getFileExtension(url)
+    log(f, ' url ', url);
+    log(f, ' map ', map);
+    var result = map[ext];
+
+    if (isEmpty(result)) {
+        throw new Error('key or Value Is Empty or Key not exits in Map');
+    }
+    return result;
+}
+
+
+/**
+ *
+ * @param json
+ * @param success
+ * @param error
+ * @param mapFunction
+ * @returns {Load}
+ */
+function loadAll(json, success, error, mapFunction) {
+    const f = 'loadAll';
+
+    //url is URL of external file, success is the code
+    //to be called from the file, location is the location to
+    //insert the <script> element
+
+    if (typeof success !== 'function' && (typeof success !== 'object' || success === null)) {
+        // Configuration
+        success = function (data) {
+            log('loadAll loaded ', data);
+        };
+        error = function (data) {
+            err('loadAll !loaded ', data);
+        };
+    }
+
+    if (typeof mapFunction !== 'object') {
+        // Configuration
+        mapFunction = {
+            'js': 'js',
+            'css': 'css',
+            'css2': 'css',
+            'css3': 'css',
+            'png': 'img',
+            'bmp': 'img',
+            'jpg': 'img',
+            'gif': 'img',
+            'htm': 'html',
+            'html': 'html',
+            'html5': 'html'
+        }
+    }
+    log(' loadAll', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
+
+
+    var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
+    log('loadAll getOne ', ' elem ', elem, !isEmpty(elem));
+
+    var jloads = new Load(elem, success, error);
+
+    if (Object.keys(json).length === 1) {
+        var i = Object.keys(json)[0];
+        getOne(jloads, json[i], i, mapFunction, success, error)
+    } else {
+        for (var i in json) {
+            var object = json[i];
+            getOne(jloads, object, i, mapFunction, success, error)
+        }
+    }
+    // success(json);
+
+    return jloads;
+}
+
+/**
+ *
+ * @param jloads
+ * @param object
+ * @param i
+ * @param mapFunction
+ * @param success
+ * @param error
+ */
+function getOne(jloads, object, i, mapFunction, success, error) {
+    const f = 'loadAll getOne';
+
+    log(f, ' jloads.getTarget() ', jloads.getTarget());
+
+    // if (i === 'head' || !isEmpty(jloads.getTarget())) {
+    log(f, ' object i ', object, i);
+    if (i === 'head') {
+        loadContentByUrls(jloads, object, mapFunction, success, error);
+        success(jloads.getTarget());
+    } else {
+        log(f, ' wait for DOM tree i ', i);
+        log(f, ' wait for DOM tree target ', jloads.getTarget());
+        document.addEventListener("DOMContentLoaded", function () {
+            ReadyHtml(object, i, mapFunction, success, error);
+        });
+    }
+    // error(elem);
+}
+
+/**
+ *
+ * @param jloads
+ * @param object
+ * @param mapFunction
+ * @param success
+ * @param error
+ */
+function loadContentByUrls(jloads, object, mapFunction, success, error) {
+
+    const f = 'loadAll loadContentByUrls';
+
+    log(f, ' isArray object, elem, mapFunction', object, isArray(object), mapFunction);
+
+    if (isArray(object)) {
+        var url = '';
+        for (var id in object) {
+            log(f, ' isArray', ' id ', id);
+            url = object[id];
+            log(f, ' isArray', ' url ', url);
+
+            if (typeof url === 'string') {
+                try {
+                    const funcName = getFunctionName(url, mapFunction);
+                    log(f, ' funcName ', funcName);
+                    // log(funcName, url, elem);
+                    jloads[funcName](url);
+                    success(url);
+                } catch (e) {
+                    // log(f, ' ERROR elem ', elem);
+                    log(f, ' ERROR e ', e);
+                    error(e);
+                }
+
+                // jloads.js([url]);
+                // elem.appendChild(url, funcName);
+            }
+        }
+    } else {
+        log(f, ' isArray ERROR object', object);
+        error(object);
+    }
+}
+
+
+/**
+ *
+ * @param object
+ * @param i
+ * @param mapFunction
+ * @param success
+ * @param error
+ * @returns {*}
+ * @constructor
+ */
+function ReadyHtml(object, i, mapFunction, success, error) {
+    const f = 'loadAll ReadyHtml';
+
+    log(f, ' i ', i);
+    var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
+    log(f, ' elem ', elem);
+
+    var jloads = new Load(elem, success, error);
+
+    if (!isEmpty(elem)) {
+        loadContentByUrls(jloads, object, mapFunction, success, error);
+        success(elem);
+    } else {
+        error(elem);
+    }
+}
 // xhr.js
 /**
  * @returns {boolean}
@@ -79,18 +326,18 @@ if (typeof log !== 'function') {
  * @returns {HTMLHeadElement}
  */
 function getTarget(target) {
-    this.constructor.name = 'getTarget';
+    const f = 'getTarget';
 
-    // log(this.constructor.name, ' target ', target);
+    // log(f, ' target ', target);
     if (isEmpty(target)) {
         target = document.getElementsByTagName('head')[0];
-        log(this.constructor.name, ' isEmpty HEAD ', target, typeof target, target.innerHTML !== 'undefined',  target.innerHTML.length, Object.keys(target));
+        log(f, ' isEmpty HEAD ', target, typeof target, target.innerHTML !== 'undefined',  target.innerHTML.length, Object.keys(target));
         if (isEmpty(target)) {
             target = document.body;
-            log(this.constructor.name, ' isEmpty BODY ', target);
+            log(f, ' isEmpty BODY ', target);
         }
     }
-    log(this.constructor.name, ' target: ', target);
+    log(f, ' target: ', target);
 
     return target;
 }
@@ -100,7 +347,7 @@ if (typeof log !== 'function') {
 }
 
 if (typeof warning !== 'function') {
-    var warning = console.error;
+    var warning = err;
 }
 /**
  *
@@ -265,23 +512,23 @@ if (typeof log !== 'function') {
  * @returns {includeHtml|boolean}
  */
 function includeHtml(url, target, replace, success, error) {
-
+    const f = 'includeHtml';
     if (typeof replace === 'number' && replace === 1) {
         replace = true;
     }
 
     if (typeof success !== 'function') {
         success = function () {
-            log(this.constructor.name, ' includeHtml success ', "included");
+            log(f, ' success ', "included");
         }
     }
 
     if (typeof error !== 'function') {
         error = function () {
-            log(this.constructor.name, ' includeHtml error ', "Page not found.");
+            log(f, ' error ', "Page not found.");
         }
     }
-    log(this.constructor.name, ' includeHtml url ', url);
+    log(f, ' url ', url);
 
     if (url) {
         /* Make an HTTP request using the attribute value as the url name: */
@@ -290,7 +537,7 @@ function includeHtml(url, target, replace, success, error) {
         // xhrObj.setRequestHeader("Content-Type","multipart/form-data; boundary=something");
         xhrObj.onreadystatechange = function () {
 
-            log('includeHtml getXHRObject', ' includeHtml target: ', target);
+            log(f, ' getXHRObject target: ', target);
 
             if (this.readyState == 4) {
                 // document.onload =
@@ -312,12 +559,12 @@ function includeHtml(url, target, replace, success, error) {
 }
 
 function loadHtmlByStatus(status, responseText, target, success, error) {
-    this.constructor.name = 'loadHtmlByStatus';
+    const f = 'loadHtmlByStatus';
 
-    log(this.constructor.name, ' includeHtml waiting for DOM tree ', getTarget(target));
+    log(f, ' includeHtml waiting for DOM tree ', target, getTarget(target));
 
     if (status == 200) {
-        log(this.constructor.name, ' includeHtml loaded HTML: ', responseText);
+        log(f, ' includeHtml loaded HTML: ', responseText, target, getTarget(target));
         getTarget(target).insertAdjacentHTML('beforeend', responseText);
         return success(this);
     }
@@ -341,24 +588,25 @@ if (typeof log !== 'function') {
  * @returns {boolean|*}
  */
 const includeImage = function (url, target, replace, success, error) {
+    const f = 'includeImage';
 
-    log(this.constructor.name, ' includeImg url: ', url);
+    log(f, ' includeImg url: ', url);
     // JLOADS_DEBUG || log('el', el);
 
     let img = new Image;
     img.onload = function () {
-        log(this.constructor.name, "include Image onload url: ", url);
-        log(this.constructor.name, "include Image replace: ", replace);
+        log(f, "include Image onload url: ", url);
+        log(f, "include Image replace: ", replace);
 
         if (typeof replace === 'number' && replace === 1) {
             replace = true;
         }
         // JLOADS_DEBUG || log('typeof self.cfg.replace', typeof self.cfg.replace);
-        log(this.constructor.name, "include Image replace: ", replace);
+        log(f, "include Image replace: ", replace);
 
 
         if (replace) {
-            log(this.constructor.name, 'includeImage elmnt firstChild: ', elmnt.firstChild);
+            log(f, 'includeImage elmnt firstChild: ', elmnt.firstChild);
             elmnt.removeChild(elmnt.firstChild);
             // let element = document.getElementById("top");
             // while (element.firstChild) {
@@ -526,6 +774,9 @@ var Load = function (target, success, error) {
         self.cfg.target = target;
         return self;
     };
+    self.getTarget = function () {
+        return self.cfg.target;
+    };
 
     self.delay = function (delay) {
         self.cfg.delay = delay;
@@ -598,13 +849,13 @@ var Load = function (target, success, error) {
                     }
                     log(this.constructor.name, ' js ', script_url, exe);
                 } catch (err) {
-                    console.error('! js ', script_url, err);
+                    err('! js ', script_url, err);
                     error();
                 }
             }
         } else {
             includeScript(self.getEnvUrl(url), target, success, error);
-            // console.error('apiunit obj: is not object:', obj);
+            // err('apiunit obj: is not object:', obj);
         }
 
         return self;
@@ -642,12 +893,12 @@ var Load = function (target, success, error) {
                     var exe = includeStyle(script_url, target, success, error);
                     log(this.constructor.name, ' loadCss exe ', exe);
                 } catch (err) {
-                    console.error('!load CSS ', script_url, err);
+                    err('!load CSS ', script_url, err);
                 }
             }
         } else {
             includeStyle(self.getEnvUrl(url), target, success, error);
-            // console.error('apiunit obj: is not object:', obj);
+            // err('apiunit obj: is not object:', obj);
         }
 
         return self;
@@ -672,6 +923,7 @@ var Load = function (target, success, error) {
 
 
     self.html = function (url) {
+        log(this.constructor.name, ' self.cfg.delay ', self.cfg.delay);
 
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
@@ -688,6 +940,8 @@ var Load = function (target, success, error) {
     };
 
     self.loadHtml = function (url) {
+        log(this.constructor.name, ' self.cfg.target ', self.cfg.target);
+
         if (typeof url === 'object') {
             //log(this.constructor.name, 'obj:', obj);
             var last = false;
@@ -707,13 +961,13 @@ var Load = function (target, success, error) {
                     // }
                     log(this.constructor.name, ' html ', script_url, exe);
                 } catch (err) {
-                    console.error('! html ', script_url, err);
+                    err('! html ', script_url, err);
                     error();
                 }
             }
         } else {
             includeHtml(self.getEnvUrl(url), self.cfg.target, self.cfg.replace, self.success, self.error);
-            // console.error('apiunit obj: is not object:', obj);
+            // err('apiunit obj: is not object:', obj);
         }
 
         return self;
@@ -750,12 +1004,12 @@ var Load = function (target, success, error) {
                     var exe = includeImage(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
                     log(this.constructor.name, ' img ', script_url, exe);
                 } catch (err) {
-                    console.error('! img ', script_url, err);
+                    err('! img ', script_url, err);
                 }
             }
         } else {
             includeImage(self.getEnvUrl(url), self.cfg.target, self.cfg.replace, self.success, self.error);
-            // console.error('apiunit obj: is not object:', obj);
+            // err('apiunit obj: is not object:', obj);
         }
         return self;
     };
@@ -774,170 +1028,4 @@ function isArray(val) {
     return val !== null ||
         (typeof val === 'object' && Object.keys(val).length > 0)
         ;
-}
-// load.js
-if (typeof log !== 'function') {
-    const log = console.log;
-}
-
-function getFileExtension(filename) {
-    return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
-}
-
-function getFunctionName(url, map) {
-
-    var ext = getFileExtension(url)
-    log(this.constructor.name, ' url ', url);
-    log(this.constructor.name, ' map ', map);
-    var result = map[ext];
-
-    if (isEmpty(result)) {
-        throw new Error('key or Value Is Empty or Key not exits in Map');
-    }
-    return result;
-}
-
-
-/**
- * @param target
- * @param success
- * @param error
- * @returns {Load}
- * @constructor
- */
-function loadAll(json, success, error, mapFunction) {
-    this.constructor.name = 'loadAll';
-    //url is URL of external file, success is the code
-    //to be called from the file, location is the location to
-    //insert the <script> element
-
-    if (typeof success !== 'function' && (typeof success !== 'object' || success === null)) {
-        // Configuration
-        success = function (data) {
-            console.log('loadAll loaded ', data);
-        };
-        error = function (data) {
-            console.error('loadAll !loaded ', data);
-        };
-    }
-
-    if (typeof mapFunction !== 'object') {
-        // Configuration
-        mapFunction = {
-            'js': 'js',
-            'css': 'css',
-            'css2': 'css',
-            'css3': 'css',
-            'png': 'img',
-            'bmp': 'img',
-            'jpg': 'img',
-            'gif': 'img',
-            'htm': 'html',
-            'html': 'html',
-            'html5': 'html'
-        }
-    }
-    console.log(' loadAll', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
-
-    if (Object.keys(json).length === 1) {
-        var i = Object.keys(json)[0];
-        getOne(json[i], i, mapFunction, success, error)
-    } else {
-        for (var i in json) {
-            var object = json[i];
-            getOne(object, i, mapFunction, success, error)
-        }
-    }
-    // success(json);
-
-}
-
-var elem = document.body;
-var mapFunction = {
-    'js': 'js',
-    'css': 'css',
-    'css2': 'css',
-    'css3': 'css',
-    'png': 'img',
-    'bmp': 'img',
-    'jpg': 'img',
-    'gif': 'img',
-    'htm': 'html',
-    'html': 'html',
-    'html5': 'html'
-}
-
-
-function getOne(object, i, mapFunction, success, error) {
-    console.log('loadAll getOne ', ' object i ', object, i);
-
-    elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
-    console.log('loadAll getOne ', ' elem ', elem, !isEmpty(elem));
-
-    if (!isEmpty(elem)) {
-        console.log('loadAll getOne ', ' !isEmpty ', elem, !isEmpty(elem));
-        loadContentByUrls(object, elem, mapFunction, success, error);
-        return success(elem);
-    } else {
-        document.addEventListener("DOMContentLoaded", function () {
-            ReadyHtml(object, i, elem, mapFunction, success, error);
-        });
-
-    }
-    return error(elem);
-}
-
-function loadContentByUrls(object, elem, mapFunction, success, error) {
-
-    var jloads = new Load(elem, success, error);
-
-    this.constructor.name = 'loadAll loadContent';
-
-    console.log(this.constructor.name, ' isArray object, elem, mapFunction', object, isArray(object), elem, mapFunction);
-
-
-    if (isArray(object)) {
-        var url = '';
-        for (var id in object) {
-            console.log('loadContentByUrls isArray', ' object ', object);
-            url = object[id];
-            console.log('loadContentByUrls isArray', ' url ', url, typeof url === 'string');
-
-            if (typeof url === 'string') {
-                try {
-                    var funcName = getFunctionName(url, mapFunction);
-                    console.log(this.constructor.name, ' funcName ', funcName);
-                    // console.log(funcName, url, elem);
-                    jloads[funcName](url);
-                    success(url);
-                } catch (e) {
-                    console.log(this.constructor.name, ' ERROR elem ', elem);
-                    console.log(this.constructor.name, ' ERROR e ', e);
-                    error(e);
-                }
-
-                // jloads.js([url]);
-                // elem.appendChild(url, funcName);
-            }
-        }
-    } else {
-        console.log(this.constructor.name, ' isArray ERROR object', object);
-        error(object);
-    }
-}
-
-
-function ReadyHtml(object, i, elem, mapFunction, success, error) {
-
-    elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
-
-    console.log('ReadyHtml getOne ', ' elem ', elem, !isEmpty(elem));
-    console.log('ReadyHtml getOne ', ' i ', i);
-
-    if (!isEmpty(elem)) {
-        loadContentByUrls(object, elem, mapFunction, success, error);
-        return success(elem);
-    } else {
-        return error(elem);
-    }
 }
