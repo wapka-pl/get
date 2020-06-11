@@ -1,11 +1,15 @@
 PAGE IS NOT EXISTING
+<hr/>
 <?php
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-var_dump($_SERVER['REQUEST_URI'], $_GET);
+echo('REQUEST_URI');
+var_dump($_SERVER['REQUEST_URI']);
+echo('$_GET');
+var_dump($_GET);
 //die;
-$safe_pages = ["json", "script", "js"];
+$safe_pages = ["json", "b64", "script", "js"];
 echo "only this is possible: " . implode(" ", $safe_pages);
 exit();

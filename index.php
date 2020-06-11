@@ -28,11 +28,11 @@ $params = explode('.', $filename);
 $id = $_GET[$params[0]] = $params[0];
 //var_dump($id, $filename, $params, $_GET);
 //die;
-$safe_pages = ["json", "script", "pack.js", "js"];
+$safe_pages = ["json", "script", "pack.js", "js", "b64"];
 //$last_key = count($params) - 1;
 //$extension = $params[$last_key];
 $extension = replace_first($id . ".", "", $filename);
-if(strlen($extension)>50 && strpos($extension, 'b64/') !== false){
+if (strlen($extension) > 50 && strpos($extension, 'b64/') !== false) {
     $params = explode('b64/', $extension);
     $_GET['b64'] = $params[1];
 //    var_dump($extension);
