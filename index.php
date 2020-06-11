@@ -35,8 +35,8 @@ $extension = replace_first($id . ".", "", $filename);
 if (strlen($extension) > 20 && strpos($extension, 'b64/') !== false) {
     $params = explode('b64/', $extension);
     $_GET['b64'] = $params[1];
-    var_dump($extension);
-    var_dump($_GET);
+//    var_dump($extension);
+//    var_dump($_GET);
     include("base64.php");
 }
 //ewogICJoZWFkIjogWwogICAgIi8vY29kZS5qcXVlcnkuY29tL3VpLzEuMTIuMS9qcXVlcnktdWkubWluLmpzIiwKICAgICIvL3N0YWNrcGF0aC5ib290c3RyYXBjZG4uY29tL2Jvb3RzdHJhcC80LjQuMS9jc3MvYm9vdHN0cmFwLm1pbi5jc3MiLAogICAgIi8vY29kZS5qcXVlcnkuY29tL2pxdWVyeS0zLjUuMS5taW4uanMiLAogICAgIi8vc3RhY2twYXRoLmJvb3RzdHJhcGNkbi5jb20vYm9vdHN0cmFwLzQuNC4xL2pzL2Jvb3RzdHJhcC5taW4uanMiLAogICAgIi8vbG9hZC5qbG9hZHMuY29tL2Nzcy9waW5rLmNzcyIKICBdLAogICIjaW1hZ2UiOiBbCiAgICAiLy9sb2dvLmpsb2Fkcy5jb20vNi9jb3Zlci5wbmciCiAgXQp9
