@@ -1,6 +1,8 @@
-const JLOADS_VERSION='1.0.3';
+const JLOADS_VERSION='1.0.4';
 // load.js
-if (typeof log !== 'function') {
+
+// TODO: jloads_log = jlogs
+if (typeof jlogs !== 'function') {
 
     var print_log = function (arguments) {
         var str = ':: ';
@@ -11,7 +13,7 @@ if (typeof log !== 'function') {
         console.log(str);
         return str;
     }
-    var log = function () {
+    var jlogs = function () {
         return print_log(arguments);
         // arguments[0] === 'Load' || print_log();
     }
@@ -53,7 +55,7 @@ var mapFunction = {
     'html5': 'html'
 }
 
-log('exist?','getFileExtension');
+jlogs('exist?','getFileExtension');
 /**
  *
  * @param filename
@@ -63,7 +65,7 @@ function getFileExtension(filename) {
     return filename.split("?")[0].split("#")[0].split('.').pop();
 }
 
-log('exist?','getFunctionName');
+jlogs('exist?','getFunctionName');
 /**
  *
  * @param url
@@ -74,8 +76,8 @@ function getFunctionName(url, map) {
     const f = 'getFunctionName';
 
     var ext = getFileExtension(url)
-    log(f, ' url ', url);
-    log(f, ' map ', map);
+   jlogs(f, ' url ', url);
+   jlogs(f, ' map ', map);
     var result = map[ext];
 
     if (isEmpty(result)) {
@@ -84,7 +86,7 @@ function getFunctionName(url, map) {
     return result;
 }
 
-log('exist?','loadAll');
+jlogs('exist?','loadAll');
 /**
  *
  * @param json
@@ -103,7 +105,7 @@ function loadAll(json, success, error, mapFunction) {
     if (typeof success !== 'function' && (typeof success !== 'object' || success === null)) {
         // Configuration
         success = function (data) {
-            log('loadAll loaded ', data);
+           jlogs('loadAll loaded ', data);
         };
         error = function (data) {
             err('loadAll !loaded ', data);
@@ -126,11 +128,11 @@ function loadAll(json, success, error, mapFunction) {
             'html5': 'html'
         }
     }
-    log(' loadAll', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
+   jlogs(' loadAll', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
 
 
     var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
-    log('loadAll getOne ', ' elem ', elem, !isEmpty(elem));
+   jlogs('loadAll getOne ', ' elem ', elem, !isEmpty(elem));
 
     var jloads = new Load(elem, success, error);
 
@@ -148,7 +150,7 @@ function loadAll(json, success, error, mapFunction) {
     return jloads;
 }
 
-log('exist?',' getOne');
+jlogs('exist?','getOne');
 /**
  *
  * @param jloads
@@ -161,23 +163,23 @@ log('exist?',' getOne');
 function getOne(jloads, object, i, mapFunction, success, error) {
     const f = 'loadAll getOne';
 
-    log(f, ' jloads.getTarget() ', jloads.getTarget());
+   jlogs(f, ' jloads.getTarget() ', jloads.getTarget());
 
     // TODO: move to class E for smart load content on not existing DOM elements
     // if (i === 'head' || !isEmpty(jloads.getTarget())) {
-    log(f, ' object i ', object, i);
+   jlogs(f, ' object i ', object, i);
     if (i === 'head') {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(jloads.getTarget());
     } else if (i === 'body') {
-        log(f, ' wait for body i ', i);
-        log(f, ' wait for body target ', jloads.getTarget());
+       jlogs(f, ' wait for body i ', i);
+       jlogs(f, ' wait for body target ', jloads.getTarget());
         document.addEventListener("DOMContentLoaded", function () {
             ReadyHtml(object, i, mapFunction, success, error);
         });
     } else {
-        log(f, ' wait for element i ', i);
-        log(f, ' wait for element target ', jloads.getTarget());
+       jlogs(f, ' wait for element i ', i);
+       jlogs(f, ' wait for element target ', jloads.getTarget());
 
         try {
             // set up the mutation observer
@@ -201,15 +203,15 @@ function getOne(jloads, object, i, mapFunction, success, error) {
             });
 
         } catch (e) {
-            // log(f, ' ERROR elem ', elem);
-            log(f, ' getOne ERROR e ', e);
+            //jlogs(f, ' ERROR elem ', elem);
+           jlogs(f, ' getOne ERROR e ', e);
             error(e);
         }
     }
     // error(elem);
 }
 
-log('exist?',' loadContentByUrls');
+jlogs('exist?','loadContentByUrls');
 /**
  *
  * @param jloads
@@ -222,25 +224,25 @@ function loadContentByUrls(jloads, object, mapFunction, success, error) {
 
     const f = 'loadAll loadContentByUrls';
 
-    log(f, ' isArray object, elem, mapFunction', object, isArray(object), mapFunction);
+   jlogs(f, ' isArray object, elem, mapFunction', object, isArray(object), mapFunction);
 
     if (isArray(object)) {
         var url = '';
         for (var id in object) {
-            log(f, ' isArray', ' id ', id);
+           jlogs(f, ' isArray', ' id ', id);
             url = object[id];
-            log(f, ' isArray', ' url ', url);
+           jlogs(f, ' isArray', ' url ', url);
 
             if (typeof url === 'string') {
                 try {
                     const funcName = getFunctionName(url, mapFunction);
-                    log(f, ' funcName ', funcName);
-                    // log(funcName, url, elem);
+                   jlogs(f, ' funcName ', funcName);
+                    //jlogs(funcName, url, elem);
                     jloads[funcName](url);
                     success(url);
                 } catch (e) {
-                    // log(f, ' ERROR elem ', elem);
-                    log(f, ' ERROR e ', e);
+                    //jlogs(f, ' ERROR elem ', elem);
+                   jlogs(f, ' ERROR e ', e);
                     error(e);
                 }
 
@@ -249,12 +251,12 @@ function loadContentByUrls(jloads, object, mapFunction, success, error) {
             }
         }
     } else {
-        log(f, ' isArray ERROR object', object);
+       jlogs(f, ' isArray ERROR object', object);
         error(object);
     }
 }
 
-log('exist?','ReadyHtml');
+jlogs('exist?','ReadyHtml');
 /**
  *
  * @param object
@@ -268,9 +270,9 @@ log('exist?','ReadyHtml');
 function ReadyHtml(object, i, mapFunction, success, error) {
     const f = 'loadAll ReadyHtml';
 
-    log(f, ' i ', i);
+   jlogs(f, ' i ', i);
     var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
-    log(f, ' elem ', elem);
+   jlogs(f, ' elem ', elem);
 
     var jloads = new Load(elem, success, error);
 
@@ -287,7 +289,7 @@ function ReadyHtml(object, i, mapFunction, success, error) {
     }
 }
 
-log('exist?','waitForElementToDisplay');
+jlogs('exist?','waitForElementToDisplay');
 /**
  *
  * @param selector
@@ -297,7 +299,7 @@ log('exist?','waitForElementToDisplay');
  */
 function waitForElementToDisplay(selector, time, callback) {
     const f = 'waitForElementToDisplay';
-    log(f, ' selector ', selector);
+   jlogs(f, ' selector ', selector);
     if (document.querySelector(selector) != null) {
         // alert("The element is displayed, you can put your code instead of this alert.")
         return callback(selector);
@@ -390,16 +392,16 @@ if (typeof log !== 'function') {
 function getTarget(target) {
     const f = 'getTarget';
 
-    // log(f, ' target ', target);
+    //jlogs(f, ' target ', target);
     if (isEmpty(target)) {
         target = document.getElementsByTagName('head')[0];
-        log(f, ' isEmpty HEAD ', target, typeof target, target.innerHTML !== 'undefined',  target.innerHTML.length, Object.keys(target));
+       jlogs(f, ' isEmpty HEAD ', target, typeof target, target.innerHTML !== 'undefined',  target.innerHTML.length, Object.keys(target));
         if (isEmpty(target)) {
             target = document.body;
-            log(f, ' isEmpty BODY ', target);
+           jlogs(f, ' isEmpty BODY ', target);
         }
     }
-    log(f, ' target: ', target);
+   jlogs(f, ' target: ', target);
 
     return target;
 }
@@ -431,7 +433,7 @@ var E = function (selector, area, error, success) {
 
 
     this.success = function (elem) {
-        log(this.constructor.name, " Element func success(): ", elem);
+       jlogs(this.constructor.name, " Element func success(): ", elem);
     };
 
     this.error = function (elem) {
@@ -471,8 +473,8 @@ var E = function (selector, area, error, success) {
         }
         const elem = document.querySelector(self.cfg.selector);
 
-        log(this.constructor.name, ' first self.cfg.selector ', self.cfg.selector);
-        log(this.constructor.name, ' first elem ', elem);
+       jlogs(this.constructor.name, ' first self.cfg.selector ', self.cfg.selector);
+       jlogs(this.constructor.name, ' first elem ', elem);
 
         if (elem !== null) {
             self.cfg.exist = true;
@@ -496,8 +498,8 @@ var E = function (selector, area, error, success) {
 
         const elem = document.querySelectorAll(self.cfg.selector);
 
-        log(this.constructor.name, ' all self.cfg.selector ', self.cfg.selector);
-        log(this.constructor.name, ' all elem ', elem);
+       jlogs(this.constructor.name, ' all self.cfg.selector ', self.cfg.selector);
+       jlogs(this.constructor.name, ' all elem ', elem);
 
         if (elem !== null) {
             self.cfg.exist = true;
@@ -581,16 +583,16 @@ function includeHtml(url, target, replace, success, error) {
 
     if (typeof success !== 'function') {
         success = function () {
-            log(f, ' success ', "included");
+           jlogs(f, ' success ', "included");
         }
     }
 
     if (typeof error !== 'function') {
         error = function () {
-            log(f, ' error ', "Page not found.");
+           jlogs(f, ' error ', "Page not found.");
         }
     }
-    log(f, ' url ', url);
+   jlogs(f, ' url ', url);
 
     if (url) {
         /* Make an HTTP request using the attribute value as the url name: */
@@ -599,7 +601,7 @@ function includeHtml(url, target, replace, success, error) {
         // xhrObj.setRequestHeader("Content-Type","multipart/form-data; boundary=something");
         xhrObj.onreadystatechange = function () {
 
-            log(f, ' getXHRObject target: ', target);
+           jlogs(f, ' getXHRObject target: ', target);
 
             if (this.readyState == 4) {
                 // document.onload =
@@ -623,10 +625,10 @@ function includeHtml(url, target, replace, success, error) {
 function loadHtmlByStatus(status, responseText, target, success, error) {
     const f = 'loadHtmlByStatus';
 
-    log(f, ' includeHtml waiting for DOM tree ', target, getTarget(target));
+   jlogs(f, ' includeHtml waiting for DOM tree ', target, getTarget(target));
 
     if (status == 200) {
-        log(f, ' includeHtml loaded HTML: ', responseText, target, getTarget(target));
+       jlogs(f, ' includeHtml loaded HTML: ', responseText, target, getTarget(target));
         getTarget(target).insertAdjacentHTML('beforeend', responseText);
         return success(this);
     }
@@ -652,23 +654,23 @@ if (typeof log !== 'function') {
 const includeImage = function (url, target, replace, success, error) {
     const f = 'includeImage';
 
-    log(f, ' includeImg url: ', url);
-    // JLOADS_DEBUG || log('el', el);
+   jlogs(f, ' includeImg url: ', url);
+    // JLOADS_DEBUG ||jlogs('el', el);
 
     let img = new Image;
     img.onload = function () {
-        log(f, "include Image onload url: ", url);
-        log(f, "include Image replace: ", replace);
+       jlogs(f, "include Image onload url: ", url);
+       jlogs(f, "include Image replace: ", replace);
 
         if (typeof replace === 'number' && replace === 1) {
             replace = true;
         }
-        // JLOADS_DEBUG || log('typeof self.cfg.replace', typeof self.cfg.replace);
-        log(f, "include Image replace: ", replace);
+        // JLOADS_DEBUG ||jlogs('typeof self.cfg.replace', typeof self.cfg.replace);
+       jlogs(f, "include Image replace: ", replace);
 
 
         if (replace) {
-            log(f, 'includeImage elmnt firstChild: ', elmnt.firstChild);
+           jlogs(f, 'includeImage elmnt firstChild: ', elmnt.firstChild);
             elmnt.removeChild(elmnt.firstChild);
             // let element = document.getElementById("top");
             // while (element.firstChild) {
@@ -737,30 +739,30 @@ var Load = function (target, success, error) {
     };
 
     self.getEnv = function (url) {
-        log(this.constructor.name, '.getEnv() url: ', url);
+       jlogs(this.constructor.name, '.getEnv() url: ', url);
 
         if (hasDomain(url)) {
-            log(this.constructor.name, ' url has now own domain: ', url);
+           jlogs(this.constructor.name, ' url has now own domain: ', url);
             return {
                 'domain': ''
             };
         }
         if (self.hasEnv()) {
-            log(this.constructor.name, ' url has env:', self.cfg.env);
+           jlogs(this.constructor.name, ' url has env:', self.cfg.env);
             for (var index in self.cfg.env) {
                 if (self.cfg.env.hasOwnProperty(index)) {
-                    log(this.constructor.name, '.getEnv() function check: ', self.cfg.env[index]['name']);
+                   jlogs(this.constructor.name, '.getEnv() function check: ', self.cfg.env[index]['name']);
 
                     var callback = self.cfg.env[index]['exist'];
                     if (typeof callback === 'function' && callback(self)) {
-                        log(this.constructor.name, '.getEnv() url use env: ', self.cfg.env[index]['name']);
+                       jlogs(this.constructor.name, '.getEnv() url use env: ', self.cfg.env[index]['name']);
                         return self.cfg.env[index];
                     }
                 }
             }
         }
         if (self.getDomain()) {
-            log(this.constructor.name, '.getEnv() cfg domain exist ', self.cfg.domain);
+           jlogs(this.constructor.name, '.getEnv() cfg domain exist ', self.cfg.domain);
             return {
                 'domain': self.getDomain()
             };
@@ -783,31 +785,31 @@ var Load = function (target, success, error) {
 
 
     self.getDomain = function () {
-        // log(this.constructor.name, '.getDomain() self.cfg.domain',
+        //jlogs(this.constructor.name, '.getDomain() self.cfg.domain',
         //     self.cfg.domain, typeof self.cfg.domain === 'object' , Object.keys(self.cfg.domain).length === 0);
 
         if (isEmpty(self.cfg.domain)) {
-            log(this.constructor.name, '.getDomain() isEmpty');
+           jlogs(this.constructor.name, '.getDomain() isEmpty');
             return false;
         }
 
         for (var index in self.cfg.domain) {
 
-            log(this.constructor.name, '.getDomain() function check: ', index, self.cfg.domain);
+           jlogs(this.constructor.name, '.getDomain() function check: ', index, self.cfg.domain);
             return self.cfg.domain[index];
 /*
             if (self.cfg.domain.hasOwnProperty(index)) {
                 console.log('self.cfg.', self.cfg, self.cfg.domain, index);
                 // var callback = self.cfg.domain[index]['exist'];
                 // if (typeof callback === 'function' && callback()) {
-                //     log(this.constructor.name, '.getDomain() url use env:', self.cfg.domain[index]);
+                //    jlogs(this.constructor.name, '.getDomain() url use env:', self.cfg.domain[index]);
                 return self.cfg.domain[index];
                 // }
             }
             */
 
         }
-        log(this.constructor.name, '.getDomain() for not');
+       jlogs(this.constructor.name, '.getDomain() for not');
         return false;
     };
 
@@ -819,8 +821,8 @@ var Load = function (target, success, error) {
         obj[id] = domain;
         Object.assign(self.cfg.domain, obj);
 
-        log(this.constructor.name, '.addDomain() cfg domain', self.cfg.domain);
-        log(this.constructor.name, '.addDomain() cfg getDomain()', self.getDomain());
+       jlogs(this.constructor.name, '.addDomain() cfg domain', self.cfg.domain);
+       jlogs(this.constructor.name, '.addDomain() cfg getDomain()', self.getDomain());
 
         // self.cfg.domain = domain;
         return self;
@@ -898,10 +900,10 @@ var Load = function (target, success, error) {
             var len = url.length - 1;
             for (var i in url) {
                 last = (len == i);
-                log(this.constructor.name, ' js url.length ', len, i, last);
+               jlogs(this.constructor.name, ' js url.length ', len, i, last);
 
                 var script_url = self.getEnvUrl(url[i]);
-                log(this.constructor.name, ' js script_url ', script_url);
+               jlogs(this.constructor.name, ' js script_url ', script_url);
 
                 try {
                     if (last) {
@@ -909,7 +911,7 @@ var Load = function (target, success, error) {
                     } else {
                         var exe = includeScript(script_url, target);
                     }
-                    log(this.constructor.name, ' js ', script_url, exe);
+                   jlogs(this.constructor.name, ' js ', script_url, exe);
                 } catch (err) {
                     err('! js ', script_url, err);
                     error();
@@ -925,13 +927,13 @@ var Load = function (target, success, error) {
     self.js = function (url) {
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
-                    log(this.constructor.name, ' js delayed ', self.cfg.delay, url);
+                   jlogs(this.constructor.name, ' js delayed ', self.cfg.delay, url);
                     self.loadJs(url, self.cfg.target, self.success, self.error);
                 },
                 self.cfg.delay
             );
         } else {
-            log(this.constructor.name, ' js url ', url);
+           jlogs(this.constructor.name, ' js url ', url);
             self.loadJs(url, self.cfg.target, self.success, self.error);
         }
         return self;
@@ -946,14 +948,14 @@ var Load = function (target, success, error) {
             //log(this.constructor.name, 'obj:', obj);
 
             for (var i in url) {
-                // log(this.constructor.name, ' url:', url, i, url[i]);
+                //jlogs(this.constructor.name, ' url:', url, i, url[i]);
 
                 var script_url = self.getEnvUrl(url[i]);
-                log(this.constructor.name, ' loadCss script_url ', script_url);
+               jlogs(this.constructor.name, ' loadCss script_url ', script_url);
 
                 try {
                     var exe = includeStyle(script_url, target, success, error);
-                    log(this.constructor.name, ' loadCss exe ', exe);
+                   jlogs(this.constructor.name, ' loadCss exe ', exe);
                 } catch (err) {
                     err('!load CSS ', script_url, err);
                 }
@@ -969,13 +971,13 @@ var Load = function (target, success, error) {
     self.css = function (url) {
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
-                    log(this.constructor.name, ' css delayed ', self.cfg.delay, url);
+                   jlogs(this.constructor.name, ' css delayed ', self.cfg.delay, url);
                     self.loadCss(url, self.cfg.target, self.success, self.error);
                 },
                 self.cfg.delay
             );
         } else {
-            log(this.constructor.name, ' css loaded ', url);
+           jlogs(this.constructor.name, ' css loaded ', url);
             self.loadCss(url, self.cfg.target, self.success, self.error);
         }
         return self;
@@ -985,24 +987,24 @@ var Load = function (target, success, error) {
 
 
     self.html = function (url) {
-        log(this.constructor.name, ' self.cfg.delay ', self.cfg.delay);
+       jlogs(this.constructor.name, ' self.cfg.delay ', self.cfg.delay);
 
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
-                    log(this.constructor.name, ' html delayed ', self.cfg.delay, url);
+                   jlogs(this.constructor.name, ' html delayed ', self.cfg.delay, url);
                     self.loadHtml(url);
                 },
                 self.cfg.delay
             );
         } else {
-            log(this.constructor.name, ' html url ', url);
+           jlogs(this.constructor.name, ' html url ', url);
             self.loadHtml(url);
         }
         return self;
     };
 
     self.loadHtml = function (url) {
-        log(this.constructor.name, ' self.cfg.target ', self.cfg.target);
+       jlogs(this.constructor.name, ' self.cfg.target ', self.cfg.target);
 
         if (typeof url === 'object') {
             //log(this.constructor.name, 'obj:', obj);
@@ -1010,10 +1012,10 @@ var Load = function (target, success, error) {
             var len = url.length - 1;
             for (var i in url) {
                 last = (len == i);
-                log(this.constructor.name, ' html url.length ', len, i, last);
+               jlogs(this.constructor.name, ' html url.length ', len, i, last);
 
                 var script_url = self.getEnvUrl(url[i]);
-                log(this.constructor.name, ' html script_url ', script_url);
+               jlogs(this.constructor.name, ' html script_url ', script_url);
 
                 try {
                     // if (last) {
@@ -1021,7 +1023,7 @@ var Load = function (target, success, error) {
                     // } else {
                     //     var exe = includeHtml(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
                     // }
-                    log(this.constructor.name, ' html ', script_url, exe);
+                   jlogs(this.constructor.name, ' html ', script_url, exe);
                 } catch (err) {
                     err('! html ', script_url, err);
                     error();
@@ -1040,13 +1042,13 @@ var Load = function (target, success, error) {
     self.img = function (url) {
         if (typeof self.cfg.delay === 'number' && self.cfg.delay > 1) {
             setTimeout(function () {
-                    log(this.constructor.name, ' image delayed', self.cfg.delay, url);
+                   jlogs(this.constructor.name, ' image delayed', self.cfg.delay, url);
                     self.loadImage(url);
                 },
                 self.cfg.delay
             );
         } else {
-            log(this.constructor.name, ' image loaded ', url, self.cfg.delay);
+           jlogs(this.constructor.name, ' image loaded ', url, self.cfg.delay);
             self.loadImage(url);
         }
         return self;
@@ -1060,11 +1062,11 @@ var Load = function (target, success, error) {
             for (var i in url) {
 
                 var script_url = self.getEnvUrl(url[i]);
-                log(this.constructor.name, ' img url[i]', url[i]);
+               jlogs(this.constructor.name, ' img url[i]', url[i]);
 
                 try {
                     var exe = includeImage(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
-                    log(this.constructor.name, ' img ', script_url, exe);
+                   jlogs(this.constructor.name, ' img ', script_url, exe);
                 } catch (err) {
                     err('! img ', script_url, err);
                 }
