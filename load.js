@@ -286,7 +286,7 @@ function ReadyHtml(object, i, mapFunction, success, error) {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(elem);
     } else {
-        waitForElementToDisplay(i, 200, function (i) {
+        waitForElementToDisplay(i, 70, function (i) {
             var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
             var jloads = new Load(elem, success, error);
             loadContentByUrls(jloads, object, mapFunction, success, error);
@@ -529,8 +529,9 @@ jlogs('exist?', 'includeScript');
 function includeScript(url, target, success, error) {
     var scriptTag = document.createElement('script');
     scriptTag.src = url;
-    scriptTag.defer = 'defer';
-    // scriptTag.async = 'async';
+    scriptTag.defer = true;
+    // scriptTag.setAttribute('defer','');
+    // scriptTag.async = true;
     scriptTag.type = 'text/javascript';
 
     scriptTag.onerror = error;
