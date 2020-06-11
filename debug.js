@@ -1,6 +1,6 @@
 // get.wapka.pl / debug.js
 var print_log = function (arguments) {
-    var str = 'LOG: ';
+    var str = 'GLOG: ';
     for (var i in arguments) {
         str += arguments[i];
     }
