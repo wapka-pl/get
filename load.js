@@ -292,11 +292,11 @@ function ReadyHtml(object, i, mapFunction, success, error) {
  */
 function waitForElementToDisplay(selector, time, callback) {
     if (document.querySelector(selector) != null) {
-        alert("The element is displayed, you can put your code instead of this alert.")
+        // alert("The element is displayed, you can put your code instead of this alert.")
         return callback(selector);
     } else {
         setTimeout(function () {
-            waitForElementToDisplay(selector, time);
+            waitForElementToDisplay(selector, time, callback);
         }, time);
     }
 }
