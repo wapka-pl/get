@@ -53,6 +53,7 @@ var mapFunction = {
     'html5': 'html'
 }
 
+log('exist?','getFileExtension');
 /**
  *
  * @param filename
@@ -62,6 +63,7 @@ function getFileExtension(filename) {
     return filename.split("?")[0].split("#")[0].split('.').pop();
 }
 
+log('exist?','getFunctionName');
 /**
  *
  * @param url
@@ -82,7 +84,7 @@ function getFunctionName(url, map) {
     return result;
 }
 
-
+log('exist?','loadAll');
 /**
  *
  * @param json
@@ -146,6 +148,7 @@ function loadAll(json, success, error, mapFunction) {
     return jloads;
 }
 
+log('exist?',' getOne');
 /**
  *
  * @param jloads
@@ -206,6 +209,7 @@ function getOne(jloads, object, i, mapFunction, success, error) {
     // error(elem);
 }
 
+log('exist?',' loadContentByUrls');
 /**
  *
  * @param jloads
@@ -250,7 +254,7 @@ function loadContentByUrls(jloads, object, mapFunction, success, error) {
     }
 }
 
-
+log('exist?','ReadyHtml');
 /**
  *
  * @param object
@@ -283,6 +287,7 @@ function ReadyHtml(object, i, mapFunction, success, error) {
     }
 }
 
+log('exist?','waitForElementToDisplay');
 /**
  *
  * @param selector
@@ -291,6 +296,8 @@ function ReadyHtml(object, i, mapFunction, success, error) {
  * @returns {*}
  */
 function waitForElementToDisplay(selector, time, callback) {
+    const f = 'waitForElementToDisplay';
+    log(f, ' selector ', selector);
     if (document.querySelector(selector) != null) {
         // alert("The element is displayed, you can put your code instead of this alert.")
         return callback(selector);
