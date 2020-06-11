@@ -136,7 +136,8 @@ $json_base64 = $_GET['b64'];
 $json_string = base64_decode($json_base64);
 
 // clean white spaces
-$json_string = preg_replace('/\s\s+/', ' ', $json_string);
+//$json_string = preg_replace('/\s\s+/', ' ', $json_string);
+$json_string = preg_replace('/\s+/', '', $json_string);
 echo "// $json_string \n";
 //var_dump($json_string);
 //die;
