@@ -416,13 +416,7 @@ function getTarget(target) {
     return target;
 }
 // e.js
-if (typeof log !== 'function') {
-    const log = console.log;
-}
-
-if (typeof warning !== 'function') {
-    var warning = err;
-}
+jlogs('exist?', 'getTarget');
 /**
  *
  * @param selector
@@ -434,33 +428,31 @@ if (typeof warning !== 'function') {
  */
 var E = function (selector, area, error, success) {
 
-
-
     this.cfg = {};
     this.cfg.area = document;
     this.cfg.selector = selector;
     this.cfg.exist = false;
 
-
-    this.success = function (elem) {
-       jlogs(this.constructor.name, " Element func success(): ", elem);
-    };
-
-    this.error = function (elem) {
-        warning(this.constructor.name, "! Element func error(): ", elem);
-    };
-
-    if (typeof this.cfg.selector !== 'string') {
-        warning(this.constructor.name, "! Element selector: ", elem);
-    }
-
     if (typeof success === 'function') {
         this.success = success;
+    } else {
+        this.success = function (elem) {
+            jlogs(this.constructor.name, " Element func success(): ", elem);
+        };
     }
 
     if (typeof error === 'function') {
         this.error = error;
+    } else {
+        this.error = function (elem) {
+            jlogs(this.constructor.name, "! Element func error(): ", elem);
+        };
     }
+
+    if (typeof this.cfg.selector !== 'string') {
+        jlogs(this.constructor.name, "! Element selector: ", elem);
+    }
+
 
     var self = this;
 
@@ -483,8 +475,8 @@ var E = function (selector, area, error, success) {
         }
         const elem = document.querySelector(self.cfg.selector);
 
-       jlogs(this.constructor.name, ' first self.cfg.selector ', self.cfg.selector);
-       jlogs(this.constructor.name, ' first elem ', elem);
+        jlogs(this.constructor.name, ' first self.cfg.selector ', self.cfg.selector);
+        jlogs(this.constructor.name, ' first elem ', elem);
 
         if (elem !== null) {
             self.cfg.exist = true;
@@ -508,8 +500,8 @@ var E = function (selector, area, error, success) {
 
         const elem = document.querySelectorAll(self.cfg.selector);
 
-       jlogs(this.constructor.name, ' all self.cfg.selector ', self.cfg.selector);
-       jlogs(this.constructor.name, ' all elem ', elem);
+        jlogs(this.constructor.name, ' all self.cfg.selector ', self.cfg.selector);
+        jlogs(this.constructor.name, ' all elem ', elem);
 
         if (elem !== null) {
             self.cfg.exist = true;
