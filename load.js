@@ -286,7 +286,7 @@ function ReadyHtml(object, i, mapFunction, success, error) {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(elem);
     } else {
-        waitForElementToDisplay(i, 70, function (i) {
+        waitForElementToDisplay(i, 40, function (i) {
             var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
             var jloads = new Load(elem, success, error);
             loadContentByUrls(jloads, object, mapFunction, success, error);
