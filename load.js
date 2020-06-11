@@ -166,7 +166,7 @@ function getOne(jloads, object, i, mapFunction, success, error) {
     if (i === 'head') {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(jloads.getTarget());
-    } else if (i === 'body')   {
+    } else if (i === 'body') {
         log(f, ' wait for body i ', i);
         log(f, ' wait for body target ', jloads.getTarget());
         document.addEventListener("DOMContentLoaded", function () {
@@ -175,30 +175,8 @@ function getOne(jloads, object, i, mapFunction, success, error) {
     } else {
         log(f, ' wait for element i ', i);
         log(f, ' wait for element target ', jloads.getTarget());
-        var MY_SELECTOR = i;
 
         try {
-            // var observer = new MutationObserver(function(mutations){
-            //     for (var i=0; i < mutations.length; i++){
-            //         for (var j=0; j < mutations[i].addedNodes.length; j++){
-            //             // We're iterating through _all_ the elements as the parser parses them,
-            //             // deciding if they're the one we're looking for.
-            //             if (mutations[i].addedNodes[j].matches(MY_SELECTOR)){
-            //                 ReadyHtml(object, i, mapFunction, success, error);
-            //                 // We found our element, we're done:
-            //                 observer.disconnect();
-            //                 success(object);
-            //             };
-            //         }
-            //     }
-            // });
-            //
-            // observer.observe(document.documentElement, {
-            //     childList: true,
-            //     subtree: true
-            // });
-
-
             // set up the mutation observer
             var observer = new MutationObserver(function (mutations, me) {
                 // `mutations` is an array of mutations that occurred
@@ -218,7 +196,6 @@ function getOne(jloads, object, i, mapFunction, success, error) {
                 childList: true,
                 subtree: true
             });
-
 
         } catch (e) {
             // log(f, ' ERROR elem ', elem);
@@ -297,7 +274,30 @@ function ReadyHtml(object, i, mapFunction, success, error) {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(elem);
     } else {
-        error(elem);
+        waitForElementToDisplay(i, 500, function (i){
+            var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
+            var jloads = new Load(elem, success, error);
+            loadContentByUrls(jloads, object, mapFunction, success, error);
+        });
+        // error(elem);
+    }
+}
+
+/**
+ *
+ * @param selector
+ * @param time
+ * @param callback
+ * @returns {*}
+ */
+function waitForElementToDisplay(selector, time, callback) {
+    if (document.querySelector(selector) != null) {
+        alert("The element is displayed, you can put your code instead of this alert.")
+        return callback(selector);
+    } else {
+        setTimeout(function () {
+            waitForElementToDisplay(selector, time);
+        }, time);
     }
 }
 // xhr.js
