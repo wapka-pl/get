@@ -1,3 +1,4 @@
+const JLOADS_VERSION='1.0.3';
 // load.js
 if (typeof log !== 'function') {
 
@@ -159,17 +160,71 @@ function getOne(jloads, object, i, mapFunction, success, error) {
 
     log(f, ' jloads.getTarget() ', jloads.getTarget());
 
+    // TODO: move to class E for smart load content on not existing DOM elements
     // if (i === 'head' || !isEmpty(jloads.getTarget())) {
     log(f, ' object i ', object, i);
     if (i === 'head') {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(jloads.getTarget());
-    } else {
-        log(f, ' wait for DOM tree i ', i);
-        log(f, ' wait for DOM tree target ', jloads.getTarget());
+    } else if (i === 'body')   {
+        log(f, ' wait for body i ', i);
+        log(f, ' wait for body target ', jloads.getTarget());
         document.addEventListener("DOMContentLoaded", function () {
             ReadyHtml(object, i, mapFunction, success, error);
         });
+    } else {
+        log(f, ' wait for element i ', i);
+        log(f, ' wait for element target ', jloads.getTarget());
+        var MY_SELECTOR = i;
+
+        try {
+            // var observer = new MutationObserver(function(mutations){
+            //     for (var i=0; i < mutations.length; i++){
+            //         for (var j=0; j < mutations[i].addedNodes.length; j++){
+            //             // We're iterating through _all_ the elements as the parser parses them,
+            //             // deciding if they're the one we're looking for.
+            //             if (mutations[i].addedNodes[j].matches(MY_SELECTOR)){
+            //                 ReadyHtml(object, i, mapFunction, success, error);
+            //                 // We found our element, we're done:
+            //                 observer.disconnect();
+            //                 success(object);
+            //             };
+            //         }
+            //     }
+            // });
+            //
+            // observer.observe(document.documentElement, {
+            //     childList: true,
+            //     subtree: true
+            // });
+
+
+            // set up the mutation observer
+            var observer = new MutationObserver(function (mutations, me) {
+                // `mutations` is an array of mutations that occurred
+                // `me` is the MutationObserver instance
+                // var canvas = document.getElementById('my-canvas');
+                var canvas = document.querySelectorAll(i)[0] || document.querySelectorAll(i)
+                if (canvas) {
+                    // callback executed when canvas was found
+                    ReadyHtml(object, i, mapFunction, success, error);
+                    me.disconnect(); // stop observing
+                    return;
+                }
+            });
+
+            // start observing
+            observer.observe(document, {
+                childList: true,
+                subtree: true
+            });
+
+
+        } catch (e) {
+            // log(f, ' ERROR elem ', elem);
+            log(f, ' getOne ERROR e ', e);
+            error(e);
+        }
     }
     // error(elem);
 }
