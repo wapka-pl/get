@@ -1,4 +1,4 @@
-// filtering logs source
+// get.wapka.pl / debug.js
 var print_log = function (arguments) {
     var str = 'LOG: ';
     for (var i in arguments) {
@@ -7,8 +7,6 @@ var print_log = function (arguments) {
     console.log(str);
     return str;
 }
-var log = function () {
-    // console.log(arguments);
+var jlogs = function () {
     print_log(arguments);
-    // arguments[0] === 'Load' || print_log();
 }
