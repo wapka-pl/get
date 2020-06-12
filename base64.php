@@ -69,11 +69,11 @@ function loadUrlCss($url, $data)
     $path .= DIRECTORY_SEPARATOR . 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 //    echo $path;
 //                echo $data = ' // ' . $url;
-//    $data .= " // $url \ \n";
+//    $data .= " // $url \\ \n";
     $lines = file($path);
     foreach ($lines as $line_num => $line) {
-//        $line = str_replace("'", '"', $line);
-        $line = str_replace( '"', "'", $line);
+        $line = str_replace("'", '"', $line);
+//        $line = str_replace( '"', "'", $line);
         $data .=  trim($line) . " \\ \n";
     }
 //    $data .= implode("\\", $lines);
