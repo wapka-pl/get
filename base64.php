@@ -285,8 +285,8 @@ echo "\n";
 echo "var json =";
 $json_array_without_js = removeFromJsonArray($json_array, ['js', 'css']);
 
-downloadFromJsonArray($json_array, ['html'], false);
-$json_array_without_js = replaceHtmlFromJsonArray($json_array_without_js, ['html']);
+//downloadFromJsonArray($json_array, ['html'], false);
+//$json_array_without_js = replaceHtmlFromJsonArray($json_array_without_js, ['html']);
 
 downloadFromJsonArray($json_array, ['png'], false);
 $json_array_without_js = replaceImgFromJsonArray($json_array_without_js, ['png']);
