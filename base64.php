@@ -21,8 +21,8 @@ function saveUrlFile($url)
     $url_base64 = base64_encode($url);
     $path = 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 
-    echo "\n //" .  $path;
-    echo "\n //" .  file_exists($path);
+    echo "\n //" . $path;
+    echo "\n //" . file_exists($path);
 
     if (file_exists($path)) {
         return true;
@@ -57,7 +57,7 @@ function loadUrlFile($url, $data = '')
     return $data;
 }
 
-function downloadFromJsonArray($json_array,  array $filter = ['js'])
+function downloadFromJsonArray($json_array, array $filter = ['js'])
 {
 //    var_dump($json_array);
 //    die;
@@ -124,6 +124,7 @@ function removeFromJsonArray(array $json_array, array $filter = ['js'])
     }
     return $json_array;
 }
+
 //http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9odG1sL2NyZWF0ZS5odG1sIiwKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9qcy9jcmVhdGUuanMiCiAgICAgICAgICAgIF0KICAgICAgICB9
 //http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIsCiAgICAgICAgICAgICAgICAiaHR0cHM6Ly9hcHAud2Fwa2EucGwvaHRtbC9jcmVhdGUuaHRtbCIsCiAgICAgICAgICAgICAgICAiaHR0cHM6Ly9hcHAud2Fwa2EucGwvanMvY3JlYXRlLmpzIgogICAgICAgICAgICBdCiAgICAgICAgfQ==
 
@@ -144,7 +145,7 @@ echo "// $json_string \n";
 //$json_array = json_decode($json_string);
 $json_array = json_decode($json_string, true);
 
-if(empty($json_array)){
+if (empty($json_array)) {
     echo "JSON FORMAT PROBLEM";
     die;
 }
@@ -167,7 +168,7 @@ echo "\n";
 
 
 echo "var json =";
-$json_array_without_js = removeFromJsonArray($json_array, ['js','css']);
+$json_array_without_js = removeFromJsonArray($json_array, ['js', 'css']);
 echo json_encode($json_array_without_js, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo ";";
 echo "\n";
@@ -184,6 +185,7 @@ echo "\n";
 
 downloadFromJsonArray($json_array, ['css']);
 $css = loadFromJsonArray($json_array, ['css']);
+$css = str_replace('"', "'", $css);
 echo "\n";
 require("css.php");
 echo "\n";
