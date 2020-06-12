@@ -73,7 +73,7 @@ function downloadFromJsonArray($json_array, $filter = 'js')
     }
 }
 
-function loadFromJsonArray($json_array, $filter = 'js')
+function loadFromJsonArray(array $json_array, array $filter = ['js'])
 {
     $data = '';
     foreach ($json_array as $tag => $list) {
@@ -82,7 +82,7 @@ function loadFromJsonArray($json_array, $filter = 'js')
             $info = pathinfo($url);
 //            var_dump($info);
 //            $_SERVER['DOCUMENT_ROOT']
-            if ($info["extension"] === $filter) {
+            if (in_array($info["extension"], $filter)) {
                 $data = loadUrlFile($url, $data);
             }
         }
@@ -103,7 +103,7 @@ function removeFromJsonFile($jsonfile, $filter = 'js')
 }
 
 
-function removeFromJsonArray($json_array, $filter = 'js')
+function removeFromJsonArray(array $json_array, array $filter = ['js'])
 {
 //    var_dump('removeFromJsonArray',$json_array);
 //    die;
@@ -114,7 +114,7 @@ function removeFromJsonArray($json_array, $filter = 'js')
 
             $info = pathinfo($url);
 //            var_dump($info);
-            if ($info["extension"] === $filter) {
+            if (in_array($info["extension"], $filter)) {
 //                unset($json_array[$tag][$id]);
             } else {
                 $taglist[] = $json_array[$tag][$id];
@@ -167,7 +167,7 @@ echo "\n";
 
 
 echo "var json =";
-$json_array_without_js = removeFromJsonArray($json_array, $filter = 'js');
+$json_array_without_js = removeFromJsonArray($json_array, ['js','css']);
 echo json_encode($json_array_without_js, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo ";";
 echo "\n";
