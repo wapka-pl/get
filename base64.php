@@ -199,10 +199,11 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
         }
         $json_array[$tag] = $taglist;
     }
+
     return $json_array;
 }
 
-function base64_encode_image($filename = string, $filetype = string)
+function base64_encode_image($filename, $filetype)
 {
     if ($filename) {
         $imgbinary = fread(fopen($filename, "r"), filesize($filename));
