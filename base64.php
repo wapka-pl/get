@@ -207,6 +207,8 @@ function base64_encode_image($filename, $filetype)
 {
     if ($filename) {
         $imgbinary = fread(fopen($filename, "r"), filesize($filename));
+        var_dump($filename);
+        var_dump($imgbinary);
         return 'data:image/' . $filetype . ';base64,' . base64_encode($imgbinary);
     }
 }
