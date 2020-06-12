@@ -178,12 +178,12 @@ echo file_get_contents("loadAll.js");
 //$json_string = file_get_contents($jsonfile);
 //$json_array = json_decode($json_string, true);
 
-downloadFromJsonArray($json_array, 'js');
-echo loadFromJsonArray($json_array, 'js');
+downloadFromJsonArray($json_array, ['js']);
+echo loadFromJsonArray($json_array, ['js']);
 echo "\n";
 
-downloadFromJsonArray($json_array, 'css');
-$css = loadFromJsonArray($json_array, 'css');
+downloadFromJsonArray($json_array, ['css']);
+$css = loadFromJsonArray($json_array, ['css']);
 require("css.php");
 echo "\n";
 
