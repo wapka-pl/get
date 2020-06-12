@@ -21,8 +21,8 @@ function saveUrlFile($url, $has_comments = true)
     $url_base64 = base64_encode($url);
     $path = 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 
-    if($has_comments)  echo "\n //" . $path;
-    if($has_comments) echo "\n //" . file_exists($path);
+    if ($has_comments) echo "\n //" . $path;
+    if ($has_comments) echo "\n //" . file_exists($path);
 
     if (file_exists($path)) {
         return true;
@@ -33,7 +33,7 @@ function saveUrlFile($url, $has_comments = true)
     if (empty($url_info['scheme'])) {
         $download = 'https:' . $url;
     }
-    if($has_comments) echo "\n //" . $download;
+    if ($has_comments) echo "\n //" . $download;
 
     $ch = curl_init($download);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -105,7 +105,7 @@ function getLocalPathByUrl($url)
     return $path;
 }
 
-function downloadFromJsonArray($json_array, array $filter = ['js'])
+function downloadFromJsonArray($json_array, array $filter = ['js'], $has_comments = true)
 {
 //    var_dump($json_array);
 //    die;
@@ -115,7 +115,7 @@ function downloadFromJsonArray($json_array, array $filter = ['js'])
             $info = pathinfo($url);
 //            var_dump($info);
             if (in_array($info["extension"], $filter)) {
-                saveUrlFile($url);
+                saveUrlFile($url, $has_comments);
             }
         }
     }
@@ -262,7 +262,7 @@ echo "\n";
 echo "var json =";
 $json_array_without_js = removeFromJsonArray($json_array, ['js', 'css']);
 
-downloadFromJsonArray($json_array, ['png']);
+downloadFromJsonArray($json_array, ['png'], false);
 $json_array_without_js = replaceImgFromJsonArray($json_array_without_js, ['png']);
 
 var_dump($json_array_without_js);
