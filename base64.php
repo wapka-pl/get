@@ -57,6 +57,24 @@ function loadUrlFile($url, $data = '')
     return $data;
 }
 
+/**
+ * @param $url
+ * @param $data
+ * @return string
+ */
+function loadUrlCss($url, $data)
+{
+    $url_base64 = base64_encode($url);
+    $path = realpath('.');
+    $path .= DIRECTORY_SEPARATOR . 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
+//    echo $path;
+//                echo $data = ' // ' . $url;
+    $data .= " // $url / \n";
+    $lines = file($path);
+    $data .= implode('/', $lines);
+    return $data;
+}
+
 function downloadFromJsonArray($json_array, array $filter = ['js'])
 {
 //    var_dump($json_array);
@@ -83,7 +101,11 @@ function loadFromJsonArray(array $json_array, array $filter = ['js'])
 //            var_dump($info);
 //            $_SERVER['DOCUMENT_ROOT']
             if (in_array($info["extension"], $filter)) {
-                $data = loadUrlFile($url, $data);
+                if ($info["extension"] === 'css') {
+                    $data = loadUrlCss($url, $data);
+                } else {
+                    $data = loadUrlFile($url, $data);
+                }
             }
         }
     }
