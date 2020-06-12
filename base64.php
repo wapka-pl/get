@@ -205,12 +205,14 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
 
 function base64_encode_image($filename, $filetype)
 {
+    var_dump($filename);
     if ($filename) {
         $imgbinary = fread(fopen($filename, "r"), filesize($filename));
-        var_dump($filename);
+
         var_dump($imgbinary);
         return 'data:image/' . $filetype . ';base64,' . base64_encode($imgbinary);
     }
+    return '0';
 }
 
 //http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9odG1sL2NyZWF0ZS5odG1sIiwKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9qcy9jcmVhdGUuanMiCiAgICAgICAgICAgIF0KICAgICAgICB9
