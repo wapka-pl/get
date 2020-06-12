@@ -72,7 +72,8 @@ function loadUrlCss($url, $data)
     $data .= " // $url \ \n";
     $lines = file($path);
     foreach ($lines as $line_num => $line) {
-        $line = str_replace("'", '"', $line);
+//        $line = str_replace("'", '"', $line);
+        $line = str_replace( '"', "'", $line);
         $data .=  trim($line) . " \\ \n";
     }
 //    $data .= implode("\\", $lines);
