@@ -242,10 +242,15 @@ function loadContentByUrls(jloads, object, mapFunction, success, error) {
 
             if (typeof url === 'string') {
                 try {
-                    const funcName = getFunctionName(url, mapFunction);
-                    jlogs(f, ' funcName ', funcName);
-                    //jlogs(funcName, url, elem);
-                    jloads[funcName](url);
+                    // base64 in url
+                    if(url.length >200){
+                        jloads['img'](url);
+                    } else {
+                        const funcName = getFunctionName(url, mapFunction);
+                        jlogs(f, ' funcName ', funcName);
+                        //jlogs(funcName, url, elem);
+                        jloads[funcName](url);
+                    }
                     success(url);
                 } catch (e) {
                     //jlogs(f, ' ERROR elem ', elem);
