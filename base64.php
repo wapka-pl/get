@@ -71,7 +71,10 @@ function loadUrlCss($url, $data)
 //                echo $data = ' // ' . $url;
     $data .= " // $url \ \n";
     $lines = file($path);
-    $data .= implode("\\", $lines);
+    foreach ($lines as $line_num => $line) {
+        $data .= $line . "\\";
+    }
+//    $data .= implode("\\", $lines);
     return $data;
 }
 
