@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/wapka-pl-get.iml" filepath="$PROJECT_DIR$/.idea/wapka-pl-get.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../PhpstormProjects/wapka-pl-wp-plugin/.idea/wapka-pl-wp-plugin.iml" filepath="$PROJECT_DIR$/../../PhpstormProjects/wapka-pl-wp-plugin/.idea/wapka-pl-wp-plugin.iml" />
     </modules>
   </component>
 </project>

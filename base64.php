@@ -182,4 +182,9 @@ downloadFromJsonArray($json_array, 'js');
 echo loadFromJsonArray($json_array, 'js');
 echo "\n";
 
+downloadFromJsonArray($json_array, 'css');
+$css = loadFromJsonArray($json_array, 'css');
+require("css.php");
+echo "\n";
+
 exit();
