@@ -74,11 +74,35 @@ function loadUrlCss($url, $data)
     foreach ($lines as $line_num => $line) {
         $line = str_replace("'", '"', $line);
 //        $line = str_replace( '"', "'", $line);
-        $data .=  trim($line) . " ";
+        $data .= trim($line) . " ";
 //        $data .=  trim($line) . " \\ \n";
     }
 //    $data .= implode("\\", $lines);
     return $data;
+}
+
+/**
+ * @param $url
+ * @param $data
+ * @return string
+ */
+function loadUrlPng($url, $data)
+{
+    $url_base64 = base64_encode($url);
+    $path = realpath('.');
+    $path .= DIRECTORY_SEPARATOR . 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
+    $data .= file_get_contents($path);
+
+    return $data;
+}
+
+function getLocalPathByUrl($url)
+{
+    $url_base64 = base64_encode($url);
+    $path = realpath('.');
+    $path .= DIRECTORY_SEPARATOR . 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
+
+    return $path;
 }
 
 function downloadFromJsonArray($json_array, array $filter = ['js'])
@@ -109,6 +133,8 @@ function loadFromJsonArray(array $json_array, array $filter = ['js'])
             if (in_array($info["extension"], $filter)) {
                 if ($info["extension"] === 'css') {
                     $data = loadUrlCss($url, $data);
+//                } else if ($info["extension"] === 'png') {
+//                    $data = loadUrlPng($url, $data);
                 } else {
                     $data = loadUrlFile($url, $data);
                 }
@@ -151,6 +177,37 @@ function removeFromJsonArray(array $json_array, array $filter = ['js'])
         $json_array[$tag] = $taglist;
     }
     return $json_array;
+}
+
+function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
+{
+//    var_dump('removeFromJsonArray',$json_array);
+//    die;
+    foreach ($json_array as $tag => $list) {
+//        var_dump($tag, $list);
+        $taglist = [];
+        foreach ($list as $id => $url) {
+
+            $info = pathinfo($url);
+//            var_dump($info);
+            if (in_array($info["extension"], $filter)) {
+                $json_array[$tag][$id] = base64_encode_image(getLocalPathByUrl($url), 'png');
+                $taglist[] = $json_array[$tag][$id];
+            } else {
+                $taglist[] = $json_array[$tag][$id];
+            }
+        }
+        $json_array[$tag] = $taglist;
+    }
+    return $json_array;
+}
+
+function base64_encode_image($filename = string, $filetype = string)
+{
+    if ($filename) {
+        $imgbinary = fread(fopen($filename, "r"), filesize($filename));
+        return 'data:image/' . $filetype . ';base64,' . base64_encode($imgbinary);
+    }
 }
 
 //http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9odG1sL2NyZWF0ZS5odG1sIiwKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9qcy9jcmVhdGUuanMiCiAgICAgICAgICAgIF0KICAgICAgICB9
@@ -197,6 +254,11 @@ echo "\n";
 
 echo "var json =";
 $json_array_without_js = removeFromJsonArray($json_array, ['js', 'css']);
+
+downloadFromJsonArray($json_array, ['png']);
+$json_array_without_js = replaceImgFromJsonArray($json_array_without_js, ['png']);
+
+
 echo json_encode($json_array_without_js, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo ";";
 echo "\n";
@@ -216,5 +278,6 @@ $css = loadFromJsonArray($json_array, ['css']);
 echo "\n";
 require("css.php");
 echo "\n";
+
 
 exit();
