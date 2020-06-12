@@ -72,6 +72,7 @@ function loadUrlCss($url, $data)
     $data .= " // $url \ \n";
     $lines = file($path);
     foreach ($lines as $line_num => $line) {
+        $line = str_replace("'", '"', $line);
         $data .=  trim($line) . " \\ \n";
     }
 //    $data .= implode("\\", $lines);
@@ -210,7 +211,6 @@ echo "\n";
 
 downloadFromJsonArray($json_array, ['css']);
 $css = loadFromJsonArray($json_array, ['css']);
-$css = str_replace('"', "'", $css);
 echo "\n";
 require("css.php");
 echo "\n";
