@@ -78,9 +78,11 @@ function getFunctionName(url, map) {
     const f = 'getFunctionName';
 
     var ext = getFileExtension(url)
+    // jlogs(f, ' map ', map);
     jlogs(f, ' url ', url);
-    jlogs(f, ' map ', map);
+    jlogs(f, ' ext ', ext);
     var result = map[ext];
+    jlogs(f, ' result ', result);
 
     if (isEmpty(result)) {
         throw new Error('key or Value Is Empty or Key not exits in Map');
@@ -658,29 +660,33 @@ const includeImage = function (url, target, replace, success, error) {
     jlogs(f, ' includeImg url: ', url);
     jlogs(f, ' includeImg target: ', target);
 
+
     let img = new Image;
-    img.onload = function () {
-        jlogs(f, "include Image onload url: ", url);
-        jlogs(f, "include Image replace: ", replace);
+    // if base64
+    if (url.length < 200) {
+        img.onload = function () {
+            jlogs(f, "include Image onload url: ", url);
+            // jlogs(f, "include Image replace: ", replace);
 
-        if (typeof replace === 'number' && replace === 1) {
-            replace = true;
-        }
-        // JLOADS_DEBUG ||jlogs('typeof self.cfg.replace', typeof self.cfg.replace);
-        jlogs(f, "include Image replace: ", replace);
+            if (typeof replace === 'number' && replace === 1) {
+                replace = true;
+            }
+            // JLOADS_DEBUG ||jlogs('typeof self.cfg.replace', typeof self.cfg.replace);
+            jlogs(f, "include Image replace: ", replace);
 
 
-        if (replace) {
-            jlogs(f, 'includeImage getTarget(target): ', getTarget(target));
-            jlogs(f, 'includeImage getTarget(target) firstChild: ', getTarget(target).firstChild);
-            getTarget(target).removeChild(getTarget(target).firstChild);
-            // let element = document.getElementById("top");
-            // while (element.firstChild) {
-            //     element.removeChild(element.firstChild);
-            // }
-        }
-        getTarget(target).appendChild(img);
-    };
+            if (replace) {
+                jlogs(f, 'includeImage getTarget(target): ', getTarget(target));
+                jlogs(f, 'includeImage getTarget(target) firstChild: ', getTarget(target).firstChild);
+                getTarget(target).removeChild(getTarget(target).firstChild);
+                // let element = document.getElementById("top");
+                // while (element.firstChild) {
+                //     element.removeChild(element.firstChild);
+                // }
+            }
+            getTarget(target).appendChild(img);
+        };
+    }
 
     return img.src = url;  // erst nach dem Event Listener!
 }
@@ -1061,8 +1067,8 @@ var Load = function (target, success, error) {
 
             for (var i in url) {
 
+                jlogs(this.constructor.name, ' img url[i]', url[i]);
                 var script_url = self.getEnvUrl(url[i]);
-               jlogs(this.constructor.name, ' img url[i]', url[i]);
 
                 try {
                     var exe = includeImage(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
