@@ -1,4 +1,9 @@
-var css = '<?php GLOBAL $css; echo $css; ?>';
+var css = '<?php
+GLOBAL $css;
+echo <<<EOT
+$css
+EOT;
+ ?>';
 var head = document.head || document.getElementsByTagName('head')[0];
 var style = document.createElement('style');
 
