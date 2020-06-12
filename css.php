@@ -1,6 +1,6 @@
-var css = '<?php GLOBAL $css; echo $css; ?>',
-head = document.head || document.getElementsByTagName('head')[0],
-style = document.createElement('style');
+var css = '<?php GLOBAL $css; echo $css; ?>';
+var head = document.head || document.getElementsByTagName('head')[0];
+var style = document.createElement('style');
 
 head.appendChild(style);
 

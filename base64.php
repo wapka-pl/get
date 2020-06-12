@@ -184,6 +184,7 @@ echo "\n";
 
 downloadFromJsonArray($json_array, ['css']);
 $css = loadFromJsonArray($json_array, ['css']);
+echo "\n";
 require("css.php");
 echo "\n";
 
