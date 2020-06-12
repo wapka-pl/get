@@ -181,8 +181,6 @@ function removeFromJsonArray(array $json_array, array $filter = ['js'])
 
 function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
 {
-//    var_dump('removeFromJsonArray',$json_array);
-//    die;
     foreach ($json_array as $tag => $list) {
 //        var_dump($tag, $list);
         $taglist = [];
@@ -215,6 +213,31 @@ function base64_encode_image($filename, $filetype)
         return 'data:image/' . $filetype . ';base64,' . base64_encode($imgbinary);
     }
     return '0';
+}
+
+
+function replaceHtmlFromJsonArray(array $json_array, array $filter = ['html'])
+{
+    foreach ($json_array as $tag => $list) {
+//        var_dump($tag, $list);
+        $taglist = [];
+        foreach ($list as $id => $url) {
+
+            $info = pathinfo($url);
+//            var_dump($info);
+            if (in_array($info["extension"], $filter)) {
+                $json_array[$tag][$id] = getLocalPathByUrl($url);
+//                var_dump($json_array[$tag][$id]);
+//                die;
+                $taglist[] = $json_array[$tag][$id];
+            } else {
+                $taglist[] = $json_array[$tag][$id];
+            }
+        }
+        $json_array[$tag] = $taglist;
+    }
+
+    return $json_array;
 }
 
 //http://localhost/base64.php?b64=ICAgICAgICB7CiAgICAgICAgICAgICJib2R5IiA6IFsKICAgICAgICAgICAgICAgICJodHRwczovL2xvZ28uamxvYWRzLmNvbS82L2NvdmVyLnBuZyIKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9odG1sL2NyZWF0ZS5odG1sIiwKICAgICAgICAgICAgICAgICJodHRwczovL2FwcC53YXBrYS5wbC9qcy9jcmVhdGUuanMiCiAgICAgICAgICAgIF0KICAgICAgICB9
@@ -262,14 +285,17 @@ echo "\n";
 echo "var json =";
 $json_array_without_js = removeFromJsonArray($json_array, ['js', 'css']);
 
+downloadFromJsonArray($json_array, ['html'], false);
+$json_array_without_js = replaceHtmlFromJsonArray($json_array_without_js, ['html']);
+
 downloadFromJsonArray($json_array, ['png'], false);
 $json_array_without_js = replaceImgFromJsonArray($json_array_without_js, ['png']);
 
 //var_dump($json_array_without_js);
 echo json_encode($json_array_without_js, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo ";";
-//die;
 echo "\n";
+
 
 echo file_get_contents("loadAll.js");
 

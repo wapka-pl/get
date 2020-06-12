@@ -574,7 +574,8 @@ function includeStyle(url, target, success, error) {
 // FASTEST loading:
 // https://www.oreilly.com/library/view/even-faster-web/9780596803773/ch04.html
 // include-html.js
-jlogs('exist?','includeHtml');
+jlogs('exist?', 'includeHtml');
+
 /**
  *
  * @param url
@@ -593,25 +594,30 @@ function includeHtml(url, target, replace, success, error) {
 
     if (typeof success !== 'function') {
         success = function () {
-           jlogs(f, ' success ', "included");
+            jlogs(f, ' success ', "included");
         }
     }
 
     if (typeof error !== 'function') {
         error = function () {
-           jlogs(f, ' error ', "Page not found.");
+            jlogs(f, ' error ', "Page not found.");
         }
     }
-   jlogs(f, ' url ', url);
+    jlogs(f, ' url ', url);
+    // if html content, NOT URL
 
-    if (url) {
+    if (url.length > 100) {
+        jlogs(f, ' includeHtml HTML target : ', target, getTarget(target));
+        getTarget(target).insertAdjacentHTML('beforeend', url);
+        return success(this);
+    } else if (url) {
         /* Make an HTTP request using the attribute value as the url name: */
         var xhrObj = getXHRObject();
         // xhrObj.setRequestHeader("Content-Type","text/html; charset=UTF-8");
         // xhrObj.setRequestHeader("Content-Type","multipart/form-data; boundary=something");
         xhrObj.onreadystatechange = function () {
 
-           jlogs(f, ' getXHRObject target: ', target);
+            jlogs(f, ' getXHRObject target: ', target);
 
             if (this.readyState == 4) {
                 // document.onload =
@@ -635,10 +641,10 @@ function includeHtml(url, target, replace, success, error) {
 function loadHtmlByStatus(status, responseText, target, success, error) {
     const f = 'loadHtmlByStatus';
 
-   jlogs(f, ' includeHtml waiting for DOM tree ', target, getTarget(target));
+    jlogs(f, ' includeHtml waiting for DOM tree ', target, getTarget(target));
 
     if (status == 200) {
-       jlogs(f, ' includeHtml loaded HTML: ', responseText, target, getTarget(target));
+        jlogs(f, ' includeHtml loaded HTML: ', responseText, target, getTarget(target));
         getTarget(target).insertAdjacentHTML('beforeend', responseText);
         return success(this);
     }
