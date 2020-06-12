@@ -57,7 +57,7 @@ function loadUrlFile($url, $data = '')
     return $data;
 }
 
-function downloadFromJsonArray($json_array, $filter = 'js')
+function downloadFromJsonArray($json_array,  array $filter = ['js'])
 {
 //    var_dump($json_array);
 //    die;
@@ -66,7 +66,7 @@ function downloadFromJsonArray($json_array, $filter = 'js')
         foreach ($list as $id => $url) {
             $info = pathinfo($url);
 //            var_dump($info);
-            if ($info["extension"] === $filter) {
+            if (in_array($info["extension"], $filter)) {
                 saveUrlFile($url);
             }
         }
