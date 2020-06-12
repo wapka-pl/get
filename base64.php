@@ -16,13 +16,13 @@ function get_include_contents($filename)
     return false;
 }
 
-function saveUrlFile($url)
+function saveUrlFile($url, $has_comments = true)
 {
     $url_base64 = base64_encode($url);
     $path = 'pack' . DIRECTORY_SEPARATOR . $url_base64 . '.txt';
 
-    echo "\n //" . $path;
-    echo "\n //" . file_exists($path);
+    if($has_comments)  echo "\n //" . $path;
+    if($has_comments) echo "\n //" . file_exists($path);
 
     if (file_exists($path)) {
         return true;
@@ -33,7 +33,7 @@ function saveUrlFile($url)
     if (empty($url_info['scheme'])) {
         $download = 'https:' . $url;
     }
-    echo "\n //" . $download;
+    if($has_comments) echo "\n //" . $download;
 
     $ch = curl_init($download);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
