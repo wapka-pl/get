@@ -192,6 +192,8 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
 //            var_dump($info);
             if (in_array($info["extension"], $filter)) {
                 $json_array[$tag][$id] = base64_encode_image(getLocalPathByUrl($url), 'png');
+                var_dump($json_array[$tag][$id]);
+                die;
                 $taglist[] = $json_array[$tag][$id];
             } else {
                 $taglist[] = $json_array[$tag][$id];
@@ -205,12 +207,11 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
 
 function base64_encode_image($filename, $filetype)
 {
-    var_dump($filename);
-    die;
+//    var_dump($filename);
+//    die;
     if ($filename) {
         $imgbinary = fread(fopen($filename, "r"), filesize($filename));
-
-        var_dump($imgbinary);
+//        var_dump($imgbinary);
         return 'data:image/' . $filetype . ';base64,' . base64_encode($imgbinary);
     }
     return '0';
