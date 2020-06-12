@@ -265,9 +265,11 @@ $json_array_without_js = removeFromJsonArray($json_array, ['js', 'css']);
 downloadFromJsonArray($json_array, ['png']);
 $json_array_without_js = replaceImgFromJsonArray($json_array_without_js, ['png']);
 
+var_dump($json_array_without_js);
 
 echo json_encode($json_array_without_js, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 echo ";";
+die;
 echo "\n";
 
 echo file_get_contents("loadAll.js");
