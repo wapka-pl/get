@@ -192,8 +192,8 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
 //            var_dump($info);
             if (in_array($info["extension"], $filter)) {
                 $json_array[$tag][$id] = base64_encode_image(getLocalPathByUrl($url), 'png');
-                var_dump($json_array[$tag][$id]);
-                die;
+//                var_dump($json_array[$tag][$id]);
+//                die;
                 $taglist[] = $json_array[$tag][$id];
             } else {
                 $taglist[] = $json_array[$tag][$id];
