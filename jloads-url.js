@@ -2,59 +2,26 @@
 const JLOADS_VERSION='1.0.4';
 // jlogs.js
 
-if (typeof jlogs !== 'function') {
-
-    var print_log = function (arguments) {
-        var str = ':: ';
-        for (var i in arguments) {
-            str += arguments[i];
-            str += ', ';
-        }
-        console.log(str);
-        return str;
+(typeof jlogs === 'function') || (jlogs = function () {
+    var str = ':: ';
+    for (var i in arguments) {
+        str += arguments[i];
+        str += ', ';
     }
-    var jlogs = function () {
-        return print_log(arguments);
-        // arguments[0] === 'Load' || print_log();
+    console.log(str);
+    return str;
+})
+
+(typeof err === 'function') || (err = function () {
+    var str = ':: ';
+    for (var i in arguments) {
+        str += arguments[i];
+        str += ', ';
     }
-
-}
-
-if (typeof err !== 'function') {
-    var print_error = function (arguments) {
-        var str = ':: ';
-        for (var i in arguments) {
-            str += arguments[i];
-            str += ', ';
-        }
-        console.error(str);
-        return str;
-    }
-    var err = function () {
-        return print_error(arguments);
-        // arguments[0] === 'Load' || print_log();
-    }
-
-}
-// load.js
-
-// PUBLIC
-var elem = document.body;
-
-var mapFunction = {
-    'js': 'js',
-    'css': 'css',
-    'css2': 'css',
-    'css3': 'css',
-    'png': 'img',
-    'bmp': 'img',
-    'jpg': 'img',
-    'gif': 'img',
-    'htm': 'html',
-    'html': 'html',
-    'html5': 'html'
-}
-
+    console.error(str);
+    return str;
+})
+// get-file-extension.js
 jlogs('exist?', 'getFileExtension');
 
 /**
@@ -65,7 +32,7 @@ jlogs('exist?', 'getFileExtension');
 function getFileExtension(filename) {
     return filename.split("?")[0].split("#")[0].split('.').pop();
 }
-
+// get-function-name.js
 jlogs('exist?', 'getFunctionName');
 
 /**
@@ -89,8 +56,45 @@ function getFunctionName(url, map) {
     }
     return result;
 }
+// wait-for.js
+jlogs('exist?', 'waitFor');
 
-jlogs('exist?', 'loadAll');
+/**
+ *
+ * @param selector
+ * @param time
+ * @param callback
+ * @returns {*}
+ */
+function waitFor(selector, time, callback) {
+    const f = 'waitFor';
+    jlogs(f, ' selector ', selector);
+    if (document.querySelector(selector) != null) {
+        // alert("The element is displayed, you can put your code instead of this alert.")
+        return callback(selector);
+    } else {
+        setTimeout(function () {
+            waitFor(selector, time, callback);
+        }, time);
+    }
+}
+var map = {
+    'js': 'js',
+    'css': 'css',
+    'css2': 'css',
+    'css3': 'css',
+    'png': 'img',
+    'bmp': 'img',
+    'jpg': 'img',
+    'gif': 'img',
+    'htm': 'html',
+    'html': 'html',
+    'html5': 'html'
+}
+// get.js
+
+// PUBLIC
+var elem = document.body;
 
 /**
  *
@@ -100,8 +104,8 @@ jlogs('exist?', 'loadAll');
  * @param mapFunction
  * @returns {Load}
  */
-function loadAll(json, success, error, mapFunction) {
-    const f = 'loadAll';
+(typeof jloadsUrl === 'function') || jlogs('exist?', 'jloadsUrl') || (function jloadsUrl(json, success, error, mapFunction) {
+    const f = 'jloadsUrl';
 
     //url is URL of external file, success is the code
     //to be called from the file, location is the location to
@@ -110,10 +114,10 @@ function loadAll(json, success, error, mapFunction) {
     if (typeof success !== 'function' && (typeof success !== 'object' || success === null)) {
         // Configuration
         success = function (data) {
-            console.log('loadAll loaded ', data);
+            console.log(f, ' loaded ', data);
         };
         error = function (data) {
-            console.error('loadAll !loaded ', data);
+            console.error(f, ' !loaded ', data);
         };
     }
 
@@ -133,11 +137,11 @@ function loadAll(json, success, error, mapFunction) {
             'html5': 'html'
         }
     }
-    jlogs(' loadAll', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
+    jlogs(' jloadsUrl', ' json ', json, Object.keys(json).length, Object.keys(json)[0]);
 
 
     var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
-    jlogs('loadAll getOne ', ' elem ', elem, !isEmpty(elem));
+    jlogs('jloadsUrl getOne ', ' elem ', elem, !isEmpty(elem));
 
     var jloads = new Load(elem, success, error);
 
@@ -153,9 +157,8 @@ function loadAll(json, success, error, mapFunction) {
     // success(json);
 
     return jloads;
-}
+})
 
-jlogs('exist?', 'getOne');
 
 /**
  *
@@ -166,8 +169,8 @@ jlogs('exist?', 'getOne');
  * @param success
  * @param error
  */
-function getOne(jloads, object, i, mapFunction, success, error) {
-    const f = 'loadAll getOne';
+(typeof getOne === 'function') || jlogs('exist?', 'getOne') || (function getOne(jloads, object, i, mapFunction, success, error) {
+    const f = 'jloadsUrl getOne';
 
     jlogs(f, ' jloads.getTarget() ', jloads.getTarget());
 
@@ -215,7 +218,7 @@ function getOne(jloads, object, i, mapFunction, success, error) {
         }
     }
     // error(elem);
-}
+})
 
 jlogs('exist?', 'loadContentByUrls');
 
@@ -227,9 +230,9 @@ jlogs('exist?', 'loadContentByUrls');
  * @param success
  * @param error
  */
-function loadContentByUrls(jloads, object, mapFunction, success, error) {
+(typeof loadContentByUrls === 'function') || jlogs('exist?', 'loadContentByUrls') || (function loadContentByUrls(jloads, object, mapFunction, success, error) {
 
-    const f = 'loadAll loadContentByUrls';
+    const f = 'jloadsUrl loadContentByUrls';
 
     jlogs(f, ' isArray object, elem, mapFunction', object, isArray(object), mapFunction);
 
@@ -243,7 +246,7 @@ function loadContentByUrls(jloads, object, mapFunction, success, error) {
             if (typeof url === 'string') {
                 try {
                     // base64 in url
-                    if(url.length >200){
+                    if (url.length > 200) {
                         jloads['img'](url);
                     } else {
                         const funcName = getFunctionName(url, mapFunction);
@@ -266,9 +269,8 @@ function loadContentByUrls(jloads, object, mapFunction, success, error) {
         jlogs(f, ' isArray ERROR object', object);
         error(object);
     }
-}
+})
 
-jlogs('exist?', 'ReadyHtml');
 
 /**
  *
@@ -280,8 +282,8 @@ jlogs('exist?', 'ReadyHtml');
  * @returns {*}
  * @constructor
  */
-function ReadyHtml(object, i, mapFunction, success, error) {
-    const f = 'loadAll ReadyHtml';
+(typeof ReadyHtml === 'function') || jlogs('exist?', 'ReadyHtml') || (function ReadyHtml(object, i, mapFunction, success, error) {
+    const f = 'jloadsUrl ReadyHtml';
 
     jlogs(f, ' i ', i);
     var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i) || document.body;
@@ -293,36 +295,14 @@ function ReadyHtml(object, i, mapFunction, success, error) {
         loadContentByUrls(jloads, object, mapFunction, success, error);
         success(elem);
     } else {
-        waitForElementToDisplay(i, 40, function (i) {
+        waitFor(i, 40, function (i) {
             var elem = document.querySelectorAll(i)[0] || document.querySelectorAll(i);
             var jloads = new Load(elem, success, error);
             loadContentByUrls(jloads, object, mapFunction, success, error);
         });
         // error(elem);
     }
-}
-
-jlogs('exist?', 'waitForElementToDisplay');
-
-/**
- *
- * @param selector
- * @param time
- * @param callback
- * @returns {*}
- */
-function waitForElementToDisplay(selector, time, callback) {
-    const f = 'waitForElementToDisplay';
-    jlogs(f, ' selector ', selector);
-    if (document.querySelector(selector) != null) {
-        // alert("The element is displayed, you can put your code instead of this alert.")
-        return callback(selector);
-    } else {
-        setTimeout(function () {
-            waitForElementToDisplay(selector, time, callback);
-        }, time);
-    }
-}
+})
 // xhr.js
 jlogs('exist?','getXHRObject');
 /**
@@ -697,7 +677,7 @@ const includeImage = function (url, target, replace, success, error) {
     // };
 
 }
-// load.js
+// jloads-url.js
 jlogs('exist?', 'Load');
 /**
  * @param target
@@ -1077,8 +1057,8 @@ var Load = function (target, success, error) {
                 try {
                     includeImage(script_url, self.cfg.target, self.cfg.replace, self.success, self.error);
                     jlogs(this.constructor.name, ' img ', script_url);
-                } catch (err) {
-                    err('! img ', script_url, err);
+                } catch (e) {
+                    err('! img ', script_url, e);
                 }
             }
         } else {

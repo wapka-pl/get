@@ -15,4 +15,4 @@ var error = function (data) {
     console.error('!loaded', data);
 };
 
-loadAll(json, success, error);
+loadUrl(json, success, error);

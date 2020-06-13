@@ -11,8 +11,8 @@ $filename = (int) key($_GET);
 if(in_array($filename, $dirs)){
     echo "//  https://get.wapka.pl/$filename.js \n";
 
-//    echo file_get_contents( "//load.jloads.com/load.js");
-    echo file_get_contents( "load.js");
+//    echo file_get_contents( "//load.jloads.com/jloads-url.js");
+    echo file_get_contents( "jloads-url.js");
     echo "var json =";
     echo file_get_contents( $filename . "/" . "jloads.json");
     echo ";";

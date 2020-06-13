@@ -160,8 +160,8 @@ $dirs = scandir($dir);
 
 echo "//  https://get.wapka.pl/b64 \n";
 echo file_get_contents("debug.js");
-//    echo file_get_contents( "//load.jloads.com/load.js");
-echo file_get_contents("load.js");
+//    echo file_get_contents( "//load.jloads.com/jloads-url.js");
+echo file_get_contents("jloads-url.js");
 echo "\n";
 
 

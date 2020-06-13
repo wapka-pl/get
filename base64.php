@@ -189,7 +189,7 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
             $info = pathinfo($url);
 //            var_dump($info);
             if (in_array($info["extension"], $filter)) {
-                $json_array[$tag][$id] = base64_encode_image(getLocalPathByUrl($url), 'png');
+                $json_array[$tag][$id] = base64_encode_image(getLocalPathByUrl($url));
 //                var_dump($json_array[$tag][$id]);
 //                die;
                 $taglist[] = $json_array[$tag][$id];
@@ -203,13 +203,14 @@ function replaceImgFromJsonArray(array $json_array, array $filter = ['png'])
     return $json_array;
 }
 
-function base64_encode_image($filename, $filetype)
+function base64_encode_image($filename)
 {
 //    var_dump($filename);
 //    die;
     if ($filename) {
         $imgbinary = fread(fopen($filename, "r"), filesize($filename));
 //        var_dump($imgbinary);
+        $filetype = mime_content_type($filename);
         return 'data:image/' . $filetype . ';base64,' . base64_encode($imgbinary);
     }
     return '0';
@@ -277,8 +278,8 @@ $dirs = scandir($dir);
 
 echo "//  https://get.wapka.pl/b64 \n";
 //echo file_get_contents("debug.js");
-//    echo file_get_contents( "//load.jloads.com/load.js");
-echo file_get_contents("load.js");
+//    echo file_get_contents( "//load.jloads.com/jloads-url.js");
+echo file_get_contents("jloads-url.js");
 echo "\n";
 
 
